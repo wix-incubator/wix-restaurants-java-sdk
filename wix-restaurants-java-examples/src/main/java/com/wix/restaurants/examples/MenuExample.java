@@ -15,6 +15,8 @@ import java.util.Locale;
  * Demonstrates the "Show Menu" flow.
  * 1) Retrieve the test restaurant's menu
  * 2) Pretty-print the menu hierarchy
+ *
+ * @see <a href="http://www.thetestaurant.com">The Testaurant</a>
  */
 public class MenuExample {
     private final WixRestaurantsClient wixRestaurants;

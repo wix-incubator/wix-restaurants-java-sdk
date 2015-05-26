@@ -17,6 +17,8 @@ import java.util.Locale;
  * 2) Create an order with 1 simple item, and 1 item with variations
  * 3) Submit the order
  * 4) Query the submitted order's status
+ *
+ * @see <a href="http://www.thetestaurant.com">The Testaurant</a>
  */
 public class SubmitOrderExample {
     private final WixRestaurantsClient wixRestaurants;
