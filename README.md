@@ -3,6 +3,12 @@ This client library is designed to support the **Wix Restaurants API**, which is
 
 The Wix Restaurants API is exposed as a standard web service that communicates JSON over HTTPS. This Java library acts as the reference client implementation and implicitly defines all API objects and methods.
 
+## Usage
+See [wix-restaurants-java-examples](https://github.com/wix/wix-restaurants-java-sdk/tree/master/wix-restaurants-java-examples) for common use cases:
+* Search for restaurants by location
+* Retrieve and display a restaurant's menu
+* Submit an order (takeout or delivery) to a restaurant
+
 ## Installation
 ### Maven users
 
