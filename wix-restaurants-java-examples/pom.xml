@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.wix.restaurants</groupId>
+    <artifactId>wix-restaurants-java-examples</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>Wix Restaurants Java Examples</description>
+	
+    <developers>
+        <developer>
+            <name>Danny Leshem</name>
+            <email>dannyl@wix.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Ohad Raz</name>
+            <email>ohadr@wix.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Yoav Amit</name>
+            <email>yoav.amit@wix.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <parent>
+        <groupId>com.wix.restaurants</groupId>
+        <artifactId>wix-restaurants-java-sdk</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+		<!-- Compile/runtime dependencies -->
+        <dependency>
+            <groupId>com.wix.restaurants</groupId>
+            <artifactId>wix-restaurants-java-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wix.restaurants</groupId>
+            <artifactId>wix-restaurants-availability-utils</artifactId>
+            <version>${com.wix.restaurants.availability.version}</version>
+        </dependency>
+
+        <!-- Test Dependencies -->
+    </dependencies>
+</project>
