@@ -2,7 +2,10 @@ package com.wix.restaurants.examples;
 
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.openrest.v1_1.*;
+import com.openrest.v1_1.Item;
+import com.openrest.v1_1.Order;
+import com.openrest.v1_1.OrderItem;
+import com.openrest.v1_1.RestaurantFullInfo;
 import com.wix.restaurants.DefaultWixRestaurantsClient;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.builders.*;
@@ -54,18 +57,16 @@ public class SubmitOrderExample {
         final MenuHelper menuHelper = new MenuHelper(full.menu);
         final PriceCalculator calculator = new PriceCalculator();
 
-        // Find Items in Menu
-        final Item carpaccio = menuHelper.findFirst("carpaccio");
-        final Item coke = menuHelper.findFirst("coke");
-        final Variation cokeOption = coke.variations.get(0);
-        final Item smallCoke = menuHelper.getItem(cokeOption.itemIds.get(0));
-
-        // Create OrderItems
+        // Create OrderItems (in a real scenario, the customer would be making these choices in the UI)
+        final Item carpaccio = menuHelper.getItem("7285589409963911");
         final OrderItem carpaccioOrderItem = new OrderItemBuilder(carpaccio)
                 .comment("Extra cheese please")
                 .build();
+
+        final Item coke = menuHelper.getItem("1712127355705869");
+        final Item smallCoke = menuHelper.getItem("6011645467251806");
         final OrderItem cokeOrderItem = new OrderItemBuilder(coke)
-                .addChoice(0, new OrderItemBuilder(smallCoke, cokeOption).build())
+                .addChoice(0, new OrderItemBuilder(smallCoke, coke.variations.get(0)).build())
                 .build();
 
         // Calculate OrderItems total price
