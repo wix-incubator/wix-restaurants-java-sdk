@@ -31,7 +31,8 @@ public class SearchExample {
     public void runExample() {
         final LatLng latLng = new LatLng(36.600106, -121.894286); // "375 Alvarado St, Monterey, CA 93940, USA"
 
-        // 1. Retrieve all restaurants that deliver to address, or offer takeout and are located within 300m of address
+        // 1. Retrieve all restaurants that deliver to address, or offer takeout and are located within 2000m of address.
+        //    Note: retrieves ALL restaurants, those that are available, and those that are currently closed.
         System.out.print("Searching for restaurants...");
         final List<SearchResult> results = wixRestaurants.search(
                 new FilterBuilder()
