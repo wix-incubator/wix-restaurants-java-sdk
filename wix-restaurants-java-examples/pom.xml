@@ -39,6 +39,12 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wix.restaurants</groupId>
+            <artifactId>wix-restaurants-authentication-api</artifactId>
+            <version>${com.wix.restaurants.authentication.version}</version>
+        </dependency>
+
 		<!-- Compile/runtime dependencies -->
         <dependency>
             <groupId>com.wix.restaurants</groupId>

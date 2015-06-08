@@ -4,17 +4,29 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.api.client.http.HttpRequestFactory;
 import com.openrest.v1_1.*;
 import com.openrest.v1_1.Error;
+import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
+import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     private final OpenrestClient openrest;
+    private final WixRestaurantsAuthenticationClient authenticationClient;
 
     public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory, Integer connectTimeout, Integer readTimeout,
                                        Integer numberOfRetries) {
         openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, Endpoints.PRODUCTION);
+        authenticationClient = new DefaultWixRestaurantsAuthenticationClient(
+                requestFactory, connectTimeout, readTimeout, numberOfRetries,
+                com.wix.restaurants.authentication.Endpoints.PRODUCTION);
+    }
+
+    @Override
+    public WixRestaurantsAuthenticationClient getAuthenticationClient() {
+        return authenticationClient;
     }
 
     @Override
@@ -63,6 +75,36 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
 
         return searchResponse.results;
     }
+
+    @Override
+    public List<Order> retrieveNewOrders(String accessToken, String restaurantId) {
+        final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
+        queryOrdersRequest.accessToken = accessToken;
+        queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
+        queryOrdersRequest.viewMode = Order.ORDER_VIEW_MODE_RESTAURANT;
+        queryOrdersRequest.status = Order.ORDER_STATUS_NEW;
+        queryOrdersRequest.ordering = "asc";
+        queryOrdersRequest.limit = Integer.MAX_VALUE;
+
+        final OrdersResponse queryOrdersResponse = request(
+                queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
+
+        return queryOrdersResponse.results;
+    }
+
+    @Override
+    public Order acceptOrder(String accessToken, String orderId) {
+        final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
+        setOrderStatusRequest.accessToken = accessToken;
+        setOrderStatusRequest.orderId = orderId;
+        setOrderStatusRequest.status = Order.ORDER_STATUS_ACCEPTED;
+
+        final Order setOrderStatusResponse = request(
+                setOrderStatusRequest, new TypeReference<Response<Order>>() {});
+
+        return setOrderStatusResponse;
+    }
+
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {
         try {
