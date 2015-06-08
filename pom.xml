@@ -62,7 +62,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
-		<openrest4j.version>1.6.1</openrest4j.version>
+		<openrest4j.version>1.7.0</openrest4j.version>
 		<com.wix.restaurants.availability.version>1.2.1</com.wix.restaurants.availability.version>
     </properties>
 	

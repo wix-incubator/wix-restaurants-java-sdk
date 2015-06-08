@@ -72,7 +72,7 @@ public class SearchExample {
 
     public static void main(String[] args) throws Exception {
         final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(requestFactory, 10000, 30000);
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(requestFactory, 10000, 30000, 1);
 
         new SearchExample(wixRestaurants).runExample();
     }

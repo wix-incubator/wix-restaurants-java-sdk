@@ -12,8 +12,9 @@ import java.util.List;
 public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     private final OpenrestClient openrest;
 
-    public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory, Integer connectTimeout, Integer readTimeout) {
-        openrest = new OpenrestClient(requestFactory, "https://api.openrest.com/v1.1", connectTimeout, readTimeout);
+    public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory, Integer connectTimeout, Integer readTimeout,
+                                       Integer numberOfRetries) {
+        openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, Endpoints.PRODUCTION);
     }
 
     @Override
