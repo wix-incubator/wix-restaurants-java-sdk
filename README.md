@@ -8,6 +8,7 @@ See [wix-restaurants-java-examples](https://github.com/wix/wix-restaurants-java-
 * Search for restaurants by location
 * Retrieve and display a restaurant's menu
 * Submit an order (takeout or delivery) to a restaurant
+* Retrieving all new orders for a restaurant, and marking them as accepted
 
 ## Installation
 ### Maven users
@@ -18,7 +19,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.wix.restaurants</groupId>
   <artifactId>wix-restaurants-java-client</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
