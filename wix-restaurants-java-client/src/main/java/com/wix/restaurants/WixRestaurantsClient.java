@@ -13,6 +13,7 @@ public interface WixRestaurantsClient {
     Order submitOrder(Order order);
 
     Order retrieveOrderAsOwner(String orderId, String ownerToken);
+    Order retrieveOrderAsRestaurant(String accessToken, String orderId);
 
     List<SearchResult> search(Filter filter, int limit);
 

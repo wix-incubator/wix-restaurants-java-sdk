@@ -65,6 +65,20 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public Order retrieveOrderAsRestaurant(String accessToken, String orderId) {
+        final GetOrderRequest getOrderRequest = new GetOrderRequest();
+        getOrderRequest.accessToken = accessToken;
+        getOrderRequest.orderId = orderId;
+        getOrderRequest.viewMode = Order.ORDER_VIEW_MODE_RESTAURANT;
+
+        final Order getOrderResponse = request(
+                getOrderRequest, new TypeReference<Response<Order>>() {});
+
+        return getOrderResponse;
+    }
+
+
+    @Override
     public List<SearchResult> search(Filter filter, int limit) {
         final SearchRequest searchRequest = new SearchRequest();
         searchRequest.filter = filter;
