@@ -1,6 +1,10 @@
 package com.wix.restaurants.builders;
 
-import com.openrest.v1_1.*;
+import com.openrest.olo.payments.Payment;
+import com.openrest.v1_1.Contact;
+import com.openrest.v1_1.Delivery;
+import com.openrest.v1_1.Order;
+import com.openrest.v1_1.OrderItem;
 import com.wix.restaurants.helpers.PriceCalculator;
 
 import java.math.BigDecimal;

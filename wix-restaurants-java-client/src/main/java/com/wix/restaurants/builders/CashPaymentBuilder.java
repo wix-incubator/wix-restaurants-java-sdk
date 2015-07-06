@@ -1,16 +1,18 @@
 package com.wix.restaurants.builders;
 
-import com.openrest.v1_1.Payment;
+import com.openrest.olo.payments.CashPayment;
 
 import java.math.BigDecimal;
 
-public class CashPaymentBuilder extends BasePaymentBuilder {
-    public CashPaymentBuilder() {
-        payment.type = Payment.PAYMENT_TYPE_CASH;
-    }
+public class CashPaymentBuilder {
+    private final CashPayment payment = new CashPayment();
 
     public CashPaymentBuilder amount(double amount) {
         payment.amount = BigDecimal.valueOf(amount).movePointRight(2).intValueExact();
         return this;
+    }
+
+    public CashPayment build() {
+        return payment;
     }
 }
