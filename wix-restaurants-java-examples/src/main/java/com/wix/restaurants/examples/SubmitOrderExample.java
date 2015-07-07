@@ -43,7 +43,7 @@ public class SubmitOrderExample {
 
         // 3. Submit Order
         System.out.print("Submitting order...");
-        final Order submittedOrder = wixRestaurants.submitOrder(order);
+        final Order submittedOrder = wixRestaurants.submitOrder(null, order);
         System.out.println(" done (order ID: " + submittedOrder.id + ", status: " + submittedOrder.status +
                 ", ownerToken: " + submittedOrder.ownerToken + ").");
 

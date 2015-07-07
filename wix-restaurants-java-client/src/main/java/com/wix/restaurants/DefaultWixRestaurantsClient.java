@@ -41,8 +41,9 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
-    public Order submitOrder(Order order) {
+    public Order submitOrder(String accessToken, Order order) {
         final SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest();
+        submitOrderRequest.accessToken = accessToken;
         submitOrderRequest.order = order;
 
         final OrderConfirmation submitOrderResponse = request(

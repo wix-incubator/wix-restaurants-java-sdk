@@ -23,6 +23,11 @@ public class OrderBuilder {
         return this;
     }
 
+    public OrderBuilder source(String source) {
+        order.source = source;
+        return this;
+    }
+
     public OrderBuilder restaurant(String restaurantId) {
         order.restaurantId = restaurantId;
         return this;

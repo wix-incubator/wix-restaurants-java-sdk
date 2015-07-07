@@ -10,7 +10,7 @@ public interface WixRestaurantsClient {
 
     RestaurantFullInfo retrieveRestaurantInfo(String restaurantId);
 
-    Order submitOrder(Order order);
+    Order submitOrder(String accessToken, Order order);
 
     Order retrieveOrderAsOwner(String orderId, String ownerToken);
     Order retrieveOrderAsRestaurant(String accessToken, String orderId);
