@@ -8,6 +8,7 @@ See [wix-restaurants-java-examples](https://github.com/wix/wix-restaurants-java-
 * Search for restaurants by location
 * Retrieve and display a restaurant's menu
 * Submit an order (takeout or delivery) to a restaurant
+* Submit an order received via a 3rd-party portal, where the customer pays the portal and not the restaurant
 * Retrieve all new orders for a restaurant, and mark them as accepted
 
 ## Installation
