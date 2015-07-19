@@ -8,7 +8,9 @@ import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.NoPermissionException;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Demonstrates the "Retrieve Orders" flow.
@@ -52,7 +54,12 @@ public class RetrieveNewOrdersExample {
 
         // 3. Mark orders as accepted
         for (Order newOrder : newOrders) {
-            wixRestaurants.acceptOrder(accessToken, newOrder.id);
+            // A common use-case is to submit orders to an external system, e.g. point-of-sale. If that's the case,
+            // users are encouraged to report back the external system's order ID (for reference) via the externalIds
+            // argument. Otherwise, an empty map should be used.
+            final Map<String, String> externalIds = Collections.singletonMap("org.example.pos", "SOME-POS-ORDER-ID");
+
+            wixRestaurants.acceptOrder(accessToken, newOrder.id, externalIds);
         }
     }
 

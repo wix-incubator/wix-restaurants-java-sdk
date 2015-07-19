@@ -11,6 +11,7 @@ import com.wix.restaurants.exceptions.*;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     private final OpenrestClient openrest;
@@ -108,11 +109,12 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
-    public Order acceptOrder(String accessToken, String orderId) {
+    public Order acceptOrder(String accessToken, String orderId, Map<String, String> externalIds) {
         final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
         setOrderStatusRequest.accessToken = accessToken;
         setOrderStatusRequest.orderId = orderId;
         setOrderStatusRequest.status = Order.ORDER_STATUS_ACCEPTED;
+        setOrderStatusRequest.externalIds = externalIds;
 
         final Order setOrderStatusResponse = request(
                 setOrderStatusRequest, new TypeReference<Response<Order>>() {});
@@ -120,6 +122,19 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         return setOrderStatusResponse;
     }
 
+    @Override
+    public Order rejectOrder(String accessToken, String orderId, String comment) {
+        final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
+        setOrderStatusRequest.accessToken = accessToken;
+        setOrderStatusRequest.orderId = orderId;
+        setOrderStatusRequest.status = Order.ORDER_STATUS_CANCELLED;
+        setOrderStatusRequest.comment = comment;
+
+        final Order setOrderStatusResponse = request(
+                setOrderStatusRequest, new TypeReference<Response<Order>>() {});
+
+        return setOrderStatusResponse;
+    }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {
         try {
