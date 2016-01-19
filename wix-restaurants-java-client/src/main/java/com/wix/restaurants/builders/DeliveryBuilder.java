@@ -1,15 +1,17 @@
 package com.wix.restaurants.builders;
 
+import com.openrest.olo.dispatches.DeliveryDispatch;
 import com.openrest.v1_1.Address;
-import com.openrest.v1_1.Delivery;
 
-public class DeliveryBuilder extends BaseDeliveryBuilder {
-    public DeliveryBuilder() {
-        delivery.type = Delivery.DELIVERY_TYPE_DELIVERY;
-    }
+public class DeliveryBuilder {
+    private final DeliveryDispatch deliveryDispatch = new DeliveryDispatch();
 
     public DeliveryBuilder toAddress(Address address) {
-        delivery.address = address;
+        deliveryDispatch.address = address;
         return this;
+    }
+
+    public DeliveryDispatch build() {
+        return deliveryDispatch;
     }
 }

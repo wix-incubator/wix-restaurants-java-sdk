@@ -13,7 +13,7 @@ import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.builders.ContactBuilder;
 import com.wix.restaurants.builders.OrderBuilder;
 import com.wix.restaurants.builders.OrderItemBuilder;
-import com.wix.restaurants.builders.TakeoutBuilder;
+import com.wix.restaurants.builders.PickupBuilder;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
 
@@ -95,7 +95,7 @@ public class DeliveryclubPaymentExample {
                         .phone("+12024561111")
                         .email("johndoe@example.org")
                         .build())
-                .delivery(new TakeoutBuilder()
+                .dispatch(new PickupBuilder()
                         .build())
                 .addItem(carpaccioOrderItem)
                 .addPayment(new DeliveryclubPaymentBuilder()

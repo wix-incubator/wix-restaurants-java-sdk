@@ -1,8 +1,8 @@
 package com.wix.restaurants.builders;
 
+import com.openrest.olo.dispatches.Dispatch;
 import com.openrest.olo.payments.Payment;
 import com.openrest.v1_1.Contact;
-import com.openrest.v1_1.Delivery;
 import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
 import com.wix.restaurants.helpers.PriceCalculator;
@@ -43,9 +43,9 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder delivery(Delivery delivery) {
-        order.delivery = delivery;
-        order.price += delivery.charge;
+    public OrderBuilder dispatch(Dispatch dispatch) {
+        order.delivery = dispatch;
+        order.price += dispatch.charge;
         return this;
     }
 

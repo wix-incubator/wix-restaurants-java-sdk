@@ -82,7 +82,7 @@ public class SubmitOrderExample {
                         .phone("+12024561111")
                         .email("johndoe@example.org")
                         .build())
-                .delivery(new TakeoutBuilder()
+                .dispatch(new PickupBuilder()
                         .build())
                 .addItem(carpaccioOrderItem)
                 .addItem(cokeOrderItem)
