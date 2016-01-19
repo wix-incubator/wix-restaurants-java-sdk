@@ -7,7 +7,7 @@ The Wix Restaurants API is exposed as a standard web service that communicates J
 See [wix-restaurants-java-examples](https://github.com/wix/wix-restaurants-java-sdk/tree/master/wix-restaurants-java-examples) for common use cases:
 * Search for restaurants by location
 * Retrieve and display a restaurant's menu
-* Submit an order (takeout or delivery) to a restaurant
+* Submit an order (pickup or delivery) to a restaurant
 * Submit an order received via a 3rd-party portal, where the customer pays the portal and not the restaurant
 * Retrieve all new orders for a restaurant, and mark them as accepted
 
@@ -20,7 +20,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.wix.restaurants</groupId>
   <artifactId>wix-restaurants-java-client</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
 </dependency>
 ```
 
