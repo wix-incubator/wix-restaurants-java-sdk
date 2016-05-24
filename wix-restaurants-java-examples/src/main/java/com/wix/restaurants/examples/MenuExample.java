@@ -64,7 +64,7 @@ public class MenuExample {
 
                     // Item image, resized to 100 pixels. For additional transformations,
                     // @see <a href="https://cloud.google.com/appengine/docs/java/images/">Images Java API Overview</a>
-                    final Blob imageBlob = item.blobs.get(Organization.BLOB_TYPE_LOGO);
+                    final Blob imageBlob = item.blobs.get(BlobTypes.BLOB_TYPE_LOGO);
                     if (imageBlob != null) {
                         System.out.print(" - " + resize(imageBlob.url, 100));
                     }
