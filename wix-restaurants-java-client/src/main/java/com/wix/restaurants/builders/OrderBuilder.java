@@ -8,6 +8,7 @@ import com.openrest.v1_1.OrderItem;
 import com.wix.restaurants.helpers.PriceCalculator;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Locale;
 
 public class OrderBuilder {
@@ -35,6 +36,11 @@ public class OrderBuilder {
 
     public OrderBuilder locale(Locale locale) {
         order.locale = locale.toString();
+        return this;
+    }
+
+    public OrderBuilder currency(Currency currency) {
+        order.currency = currency.getCurrencyCode();
         return this;
     }
 

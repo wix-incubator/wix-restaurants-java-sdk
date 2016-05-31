@@ -12,6 +12,7 @@ import com.wix.restaurants.builders.*;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
 
+import java.util.Currency;
 import java.util.Locale;
 
 /**
@@ -76,6 +77,7 @@ public class SubmitOrderExample {
                 .developer("org.example")
                 .restaurant(full.restaurant.id)
                 .locale(Locale.US)
+                .currency(Currency.getInstance(full.restaurant.currency))
                 .contact(new ContactBuilder()
                         .firstName("John")
                         .lastName("Doe")
