@@ -98,6 +98,7 @@ public class DeliveryclubPaymentExample {
                         .email("johndoe@example.org")
                         .build())
                 .dispatch(new PickupBuilder()
+                        .forAsap()
                         .build())
                 .addItem(carpaccioOrderItem)
                 .addPayment(new DeliveryclubPaymentBuilder()

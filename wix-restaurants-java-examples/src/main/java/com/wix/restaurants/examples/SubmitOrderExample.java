@@ -85,6 +85,7 @@ public class SubmitOrderExample {
                         .email("johndoe@example.org")
                         .build())
                 .dispatch(new PickupBuilder()
+                        .forAsap()
                         .build())
                 .addItem(carpaccioOrderItem)
                 .addItem(cokeOrderItem)
