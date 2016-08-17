@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.openrest.v1_1.Order;
 import com.wix.restaurants.DefaultWixRestaurantsClient;
+import com.wix.restaurants.WixAppIds;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.NoPermissionException;
@@ -30,15 +31,13 @@ public class RetrieveNewOrdersExample {
     public void runExample() {
         final String restaurantId = "8830975305376234"; // "The Testaurant"
 
-        // This example uses arbitrary values that will fail authorization.
-        // Real values should be used in a live setting.
-        final String testUsername = "example@example.org";
-        final String testPassword = "changeme";
+        // Placeholder value that will fail authentication. Use a real value in your live setting.
+        final String wixInstance = "XXX";
 
         // 1. Login with username and password to get an access token
         System.out.print("Authenticating...");
         final WixRestaurantsAuthenticationClient authentication = wixRestaurants.getAuthenticationClient();
-        final String accessToken = authentication.loginWithOpenrest(testUsername, testPassword).accessToken;
+        final String accessToken = authentication.loginWithWixInstance(WixAppIds.WIX_RESTAURANTS_ORDERS, wixInstance).accessToken;
         System.out.println(" done (accessToken: " + accessToken + ").");
 
         // 2. Retrieve new orders

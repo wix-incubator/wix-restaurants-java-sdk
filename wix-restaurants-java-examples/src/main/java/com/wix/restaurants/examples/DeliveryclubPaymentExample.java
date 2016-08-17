@@ -8,6 +8,7 @@ import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
 import com.openrest.v1_1.RestaurantFullInfo;
 import com.wix.restaurants.DefaultWixRestaurantsClient;
+import com.wix.restaurants.WixAppIds;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.builders.ContactBuilder;
@@ -44,10 +45,8 @@ public class DeliveryclubPaymentExample {
         final String restaurantId = "8830975305376234"; // "The Testaurant"
         final String portalId = "5360888428251510"; // delivery-club.ru
 
-        // This example uses arbitrary values that will fail authorization.
-        // Real values should be used in a live setting.
-        final String testUsername = "example@example.org";
-        final String testPassword = "changeme";
+        // Placeholder value that will fail authentication. Use a real value in your live setting.
+        final String wixInstance = "XXX";
 
         // Some internal reference for the payment, e.g. order ID in delivery-club.ru
         final String reference = "example-reference";
@@ -55,7 +54,7 @@ public class DeliveryclubPaymentExample {
         // 1. Login with username and password to get an access token (required for this payment type)
         System.out.print("Authenticating...");
         final WixRestaurantsAuthenticationClient authentication = wixRestaurants.getAuthenticationClient();
-        final String accessToken = authentication.loginWithOpenrest(testUsername, testPassword).accessToken;
+        final String accessToken = authentication.loginWithWixInstance(WixAppIds.WIX_RESTAURANTS_ORDERS, wixInstance).accessToken;
         System.out.println(" done (accessToken: " + accessToken + ").");
 
         // 2. Retrieve Menu
