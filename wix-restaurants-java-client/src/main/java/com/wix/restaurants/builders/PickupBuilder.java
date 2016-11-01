@@ -2,6 +2,7 @@ package com.wix.restaurants.builders;
 
 import com.openrest.olo.dispatches.Dispatch;
 import com.openrest.olo.dispatches.PickupDispatch;
+import com.wix.restaurants.TimeGuarantees;
 
 import java.util.Date;
 
@@ -9,14 +10,14 @@ public class PickupBuilder {
     private final PickupDispatch pickupDispatch = new PickupDispatch();
 
     public PickupBuilder forAsap() {
-        pickupDispatch.timeGuarantee = Dispatch.TIME_GUARANTEE_BEFORE;
+        pickupDispatch.timeGuarantee = TimeGuarantees.before;
         pickupDispatch.time = null;
         return this;
     }
 
     public PickupBuilder forFutureTime(Date when) {
-        pickupDispatch.timeGuarantee = Dispatch.TIME_GUARANTEE_APPROXIMATE;
-        pickupDispatch.time = when.getTime();
+        pickupDispatch.timeGuarantee = TimeGuarantees.approximate;
+        pickupDispatch.time = when;
         return this;
     }
 

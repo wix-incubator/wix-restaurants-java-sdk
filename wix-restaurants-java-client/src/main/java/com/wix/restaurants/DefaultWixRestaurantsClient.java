@@ -7,6 +7,7 @@ import com.openrest.v1_1.Error;
 import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.*;
+import com.wix.restaurants.olo.Statuses;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     public Order retrieveOrderAsOwner(String orderId, String ownerToken) {
         final GetOrderRequest getOrderRequest = new GetOrderRequest();
         getOrderRequest.orderId = orderId;
-        getOrderRequest.viewMode = Order.ORDER_VIEW_MODE_CUSTOMER;
+        getOrderRequest.viewMode = Actors.customer;
         getOrderRequest.ownerToken = ownerToken;
 
         final Order getOrderResponse = request(
@@ -71,7 +72,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         final GetOrderRequest getOrderRequest = new GetOrderRequest();
         getOrderRequest.accessToken = accessToken;
         getOrderRequest.orderId = orderId;
-        getOrderRequest.viewMode = Order.ORDER_VIEW_MODE_RESTAURANT;
+        getOrderRequest.viewMode = Actors.restaurant;
 
         final Order getOrderResponse = request(
                 getOrderRequest, new TypeReference<Response<Order>>() {});
@@ -97,8 +98,8 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
         queryOrdersRequest.accessToken = accessToken;
         queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
-        queryOrdersRequest.viewMode = Order.ORDER_VIEW_MODE_RESTAURANT;
-        queryOrdersRequest.status = Order.ORDER_STATUS_NEW;
+        queryOrdersRequest.viewMode = Actors.restaurant;
+        queryOrdersRequest.status = Statuses.new_;
         queryOrdersRequest.ordering = "asc";
         queryOrdersRequest.limit = Integer.MAX_VALUE;
 
@@ -113,7 +114,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
         setOrderStatusRequest.accessToken = accessToken;
         setOrderStatusRequest.orderId = orderId;
-        setOrderStatusRequest.status = Order.ORDER_STATUS_ACCEPTED;
+        setOrderStatusRequest.status = Statuses.accepted;
         setOrderStatusRequest.externalIds = externalIds;
 
         final Order setOrderStatusResponse = request(
@@ -127,7 +128,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
         setOrderStatusRequest.accessToken = accessToken;
         setOrderStatusRequest.orderId = orderId;
-        setOrderStatusRequest.status = Order.ORDER_STATUS_CANCELLED;
+        setOrderStatusRequest.status = Statuses.canceled;
         setOrderStatusRequest.comment = comment;
 
         final Order setOrderStatusResponse = request(
