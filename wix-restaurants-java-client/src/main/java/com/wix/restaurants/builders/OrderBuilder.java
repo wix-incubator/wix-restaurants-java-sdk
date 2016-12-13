@@ -35,7 +35,7 @@ public class OrderBuilder {
     }
 
     public OrderBuilder locale(Locale locale) {
-        order.locale = locale.toString();
+        order.locale = locale;
         return this;
     }
 

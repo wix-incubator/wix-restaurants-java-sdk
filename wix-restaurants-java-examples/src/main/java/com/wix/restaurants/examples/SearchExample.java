@@ -43,10 +43,9 @@ public class SearchExample {
         System.out.println(" got " + results.size () + " results.");
 
         // 2. Print each restaurant's title, address, phone, and current availability
-        final Locale locale = Locale.US;
         final Calendar now = Calendar.getInstance();
         for (SearchResult result : results) {
-            final Localizer l = new Localizer(result.locale, locale.toString());
+            final Localizer l = new Localizer(result.locale, Locale.US);
             final TimeZone tz = TimeZone.getTimeZone(result.timezone);
             now.setTimeZone(tz);
 

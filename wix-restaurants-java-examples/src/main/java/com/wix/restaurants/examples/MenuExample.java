@@ -36,8 +36,7 @@ public class MenuExample {
                 ", currency: " + full.restaurant.currency + ").");
 
         // 2. Pretty-print the menu
-        final Locale locale = Locale.US;
-        final Localizer l = new Localizer(full.restaurant.locale, locale.toString());
+        final Localizer l = new Localizer(full.restaurant.locale, Locale.US);
         final MenuHelper menuHelper = new MenuHelper(full.menu);
 
         // Menus
