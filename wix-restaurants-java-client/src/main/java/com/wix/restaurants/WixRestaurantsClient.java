@@ -1,6 +1,9 @@
 package com.wix.restaurants;
 
-import com.openrest.v1_1.*;
+import com.openrest.v1_1.Filter;
+import com.openrest.v1_1.Order;
+import com.openrest.v1_1.RestaurantFullInfo;
+import com.openrest.v1_1.SearchResult;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 
 import java.util.List;

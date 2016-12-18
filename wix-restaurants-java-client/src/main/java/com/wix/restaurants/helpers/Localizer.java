@@ -1,7 +1,7 @@
 package com.wix.restaurants.helpers;
 
-import java.util.Locale;
-import java.util.Map;
+import com.wix.restaurants.i18n.Locale;
+import com.wix.restaurants.i18n.LocalizedString;
 
 public class Localizer {
     private final Locale defaultLocale;
@@ -12,10 +12,10 @@ public class Localizer {
         this.locale = locale;
     }
 
-    public String localize(Map<Locale, String> multiLocaleString) {
-        String localized = multiLocaleString.get(locale);
+    public String localize(LocalizedString localizedString) {
+        String localized = localizedString.get(locale);
         if (localized == null) {
-            localized = multiLocaleString.get(defaultLocale);
+            localized = localizedString.get(defaultLocale);
         }
         return ((localized != null) ? localized : "");
     }

@@ -10,10 +10,10 @@ import com.wix.restaurants.availability.AvailabilityIterator;
 import com.wix.restaurants.availability.Status;
 import com.wix.restaurants.builders.FilterBuilder;
 import com.wix.restaurants.helpers.Localizer;
+import com.wix.restaurants.i18n.Locale;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -45,7 +45,7 @@ public class SearchExample {
         // 2. Print each restaurant's title, address, phone, and current availability
         final Calendar now = Calendar.getInstance();
         for (SearchResult result : results) {
-            final Localizer l = new Localizer(result.locale, Locale.US);
+            final Localizer l = new Localizer(result.locale, Locale.fromJavaLocale(java.util.Locale.US));
             final TimeZone tz = TimeZone.getTimeZone(result.timezone);
             now.setTimeZone(tz);
 

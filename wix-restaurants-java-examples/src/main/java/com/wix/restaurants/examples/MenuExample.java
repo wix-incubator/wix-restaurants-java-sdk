@@ -7,9 +7,9 @@ import com.wix.restaurants.DefaultWixRestaurantsClient;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.Localizer;
+import com.wix.restaurants.i18n.Locale;
 
 import java.math.BigDecimal;
-import java.util.Locale;
 
 /**
  * Demonstrates the "Show Menu" flow.
@@ -36,7 +36,7 @@ public class MenuExample {
                 ", currency: " + full.restaurant.currency + ").");
 
         // 2. Pretty-print the menu
-        final Localizer l = new Localizer(full.restaurant.locale, Locale.US);
+        final Localizer l = new Localizer(full.restaurant.locale, Locale.fromJavaLocale(java.util.Locale.US));
         final MenuHelper menuHelper = new MenuHelper(full.menu);
 
         // Menus

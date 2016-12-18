@@ -11,9 +11,9 @@ import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.builders.*;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
+import com.wix.restaurants.i18n.Locale;
 
 import java.util.Currency;
-import java.util.Locale;
 
 /**
  * Demonstrates the "Submit Order" flow.
@@ -76,7 +76,7 @@ public class SubmitOrderExample {
         return new OrderBuilder()
                 .developer("org.example")
                 .restaurant(full.restaurant.id)
-                .locale(Locale.US)
+                .locale(Locale.fromJavaLocale(java.util.Locale.US))
                 .currency(Currency.getInstance(full.restaurant.currency))
                 .contact(new ContactBuilder()
                         .firstName("John")

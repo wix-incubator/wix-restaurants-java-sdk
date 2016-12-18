@@ -17,10 +17,10 @@ import com.wix.restaurants.builders.OrderItemBuilder;
 import com.wix.restaurants.builders.PickupBuilder;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
+import com.wix.restaurants.i18n.Locale;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.Locale;
 
 /**
  * Demonstrates submitting an order received via a 3rd-party portal (delivery-club.ru).
@@ -88,7 +88,7 @@ public class DeliveryclubPaymentExample {
                 .developer("org.example")
                 .source(portalId)
                 .restaurant(full.restaurant.id)
-                .locale(Locale.US)
+                .locale(Locale.fromJavaLocale(java.util.Locale.US))
                 .currency(Currency.getInstance(full.restaurant.currency))
                 .contact(new ContactBuilder()
                         .firstName("John")

@@ -6,10 +6,10 @@ import com.openrest.v1_1.Contact;
 import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
 import com.wix.restaurants.helpers.PriceCalculator;
+import com.wix.restaurants.i18n.Locale;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.Locale;
 
 public class OrderBuilder {
     private final Order order = new Order();
