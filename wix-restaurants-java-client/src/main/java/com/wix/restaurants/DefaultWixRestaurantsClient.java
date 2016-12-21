@@ -2,8 +2,8 @@ package com.wix.restaurants;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.api.client.http.HttpRequestFactory;
-import com.openrest.v1_1.*;
 import com.openrest.v1_1.Error;
+import com.openrest.v1_1.*;
 import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.*;
@@ -20,7 +20,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
 
     public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory, Integer connectTimeout, Integer readTimeout,
                                        Integer numberOfRetries) {
-        openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, Endpoints.PRODUCTION);
+        openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, Endpoints.production);
         authenticationClient = new DefaultWixRestaurantsAuthenticationClient(
                 requestFactory, connectTimeout, readTimeout, numberOfRetries,
                 com.wix.restaurants.authentication.Endpoints.PRODUCTION);
