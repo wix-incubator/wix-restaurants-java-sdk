@@ -1,7 +1,6 @@
-package com.wix.restaurants.builders;
+package com.wix.restaurants.orders.builders;
 
 import com.openrest.olo.dispatches.DeliveryDispatch;
-import com.openrest.olo.dispatches.Dispatch;
 import com.openrest.v1_1.Address;
 import com.wix.restaurants.TimeGuarantees;
 

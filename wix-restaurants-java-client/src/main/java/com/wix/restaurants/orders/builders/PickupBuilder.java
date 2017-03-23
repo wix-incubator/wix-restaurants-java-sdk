@@ -1,6 +1,5 @@
-package com.wix.restaurants.builders;
+package com.wix.restaurants.orders.builders;
 
-import com.openrest.olo.dispatches.Dispatch;
 import com.openrest.olo.dispatches.PickupDispatch;
 import com.wix.restaurants.TimeGuarantees;
 

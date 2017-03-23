@@ -2,7 +2,6 @@ package com.wix.restaurants.examples;
 
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.openrest.olo.payments.DeliveryclubPayment;
 import com.openrest.v1_1.Item;
 import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
@@ -12,12 +11,13 @@ import com.wix.restaurants.WixAppIds;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.builders.ContactBuilder;
-import com.wix.restaurants.builders.OrderBuilder;
-import com.wix.restaurants.builders.OrderItemBuilder;
-import com.wix.restaurants.builders.PickupBuilder;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
 import com.wix.restaurants.i18n.Locale;
+import com.wix.restaurants.orders.builders.OrderBuilder;
+import com.wix.restaurants.orders.builders.OrderItemBuilder;
+import com.wix.restaurants.orders.builders.PickupBuilder;
+import com.wix.restaurants.payments.DeliveryclubPayment;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -85,18 +85,18 @@ public class DeliveryclubPaymentExample {
         final double orderItemsPrice = calculator.price(carpaccioOrderItem);
 
         return new OrderBuilder()
-                .developer("org.example")
-                .source(portalId)
-                .restaurant(full.restaurant.id)
-                .locale(Locale.fromJavaLocale(java.util.Locale.US))
-                .currency(Currency.getInstance(full.restaurant.currency))
-                .contact(new ContactBuilder()
-                        .firstName("John")
-                        .lastName("Doe")
-                        .phone("+12024561111")
-                        .email("johndoe@example.org")
+                .setDeveloper("org.example")
+                .setSource(portalId)
+                .setRestaurant(full.restaurant.id)
+                .setLocale(Locale.fromJavaLocale(java.util.Locale.US))
+                .setCurrency(Currency.getInstance(full.restaurant.currency))
+                .setContact(new ContactBuilder()
+                        .setFirstName("John")
+                        .setLastName("Doe")
+                        .setPhone("+12024561111")
+                        .setEmail("johndoe@example.org")
                         .build())
-                .dispatch(new PickupBuilder()
+                .setDispatch(new PickupBuilder()
                         .forAsap()
                         .build())
                 .addItem(carpaccioOrderItem)

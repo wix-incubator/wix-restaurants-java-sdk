@@ -1,6 +1,6 @@
-package com.wix.restaurants.builders;
+package com.wix.restaurants.payments.builders;
 
-import com.openrest.olo.payments.CashPayment;
+import com.wix.restaurants.payments.CashPayment;
 
 import java.math.BigDecimal;
 

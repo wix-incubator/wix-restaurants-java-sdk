@@ -5,22 +5,22 @@ import com.openrest.v1_1.Contact;
 public class ContactBuilder {
     private final Contact contact = new Contact();
 
-    public ContactBuilder firstName(String firstName) {
+    public ContactBuilder setFirstName(String firstName) {
         contact.firstName = firstName;
         return this;
     }
 
-    public ContactBuilder lastName(String lastName) {
+    public ContactBuilder setLastName(String lastName) {
         contact.lastName = lastName;
         return this;
     }
 
-    public ContactBuilder phone(String phone) {
+    public ContactBuilder setPhone(String phone) {
         contact.phone = phone;
         return this;
     }
 
-    public ContactBuilder email(String email) {
+    public ContactBuilder setEmail(String email) {
         contact.email = email;
         return this;
     }

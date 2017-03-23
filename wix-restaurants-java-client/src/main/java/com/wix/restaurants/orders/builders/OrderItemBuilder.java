@@ -1,4 +1,4 @@
-package com.wix.restaurants.builders;
+package com.wix.restaurants.orders.builders;
 
 import com.openrest.v1_1.Item;
 import com.openrest.v1_1.OrderItem;
@@ -33,12 +33,12 @@ public class OrderItemBuilder {
         this(item, null);
     }
 
-    public OrderItemBuilder count(int count) {
+    public OrderItemBuilder setCount(int count) {
         orderItem.count = count;
         return this;
     }
 
-    public OrderItemBuilder comment(String comment) {
+    public OrderItemBuilder setComment(String comment) {
         orderItem.comment = comment;
         return this;
     }

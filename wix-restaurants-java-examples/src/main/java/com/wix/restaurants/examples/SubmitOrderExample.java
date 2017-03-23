@@ -8,10 +8,14 @@ import com.openrest.v1_1.OrderItem;
 import com.openrest.v1_1.RestaurantFullInfo;
 import com.wix.restaurants.DefaultWixRestaurantsClient;
 import com.wix.restaurants.WixRestaurantsClient;
-import com.wix.restaurants.builders.*;
+import com.wix.restaurants.builders.ContactBuilder;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.PriceCalculator;
 import com.wix.restaurants.i18n.Locale;
+import com.wix.restaurants.orders.builders.OrderBuilder;
+import com.wix.restaurants.orders.builders.OrderItemBuilder;
+import com.wix.restaurants.orders.builders.PickupBuilder;
+import com.wix.restaurants.payments.builders.CashPaymentBuilder;
 
 import java.util.Currency;
 
@@ -51,7 +55,7 @@ public class SubmitOrderExample {
         // 4. Query Order status
         System.out.print("Retrieving order...");
         final Order retrievedOrder = wixRestaurants.retrieveOrderAsOwner(submittedOrder.id, submittedOrder.ownerToken);
-        System.out.println(" done (status: status: " + retrievedOrder.status + ").");
+        System.out.println(" done (status: " + retrievedOrder.status + ").");
     }
 
     private Order buildSomeOrder(RestaurantFullInfo full) {
@@ -61,7 +65,7 @@ public class SubmitOrderExample {
         // Create OrderItems (in a real scenario, the customer would be making these choices in the UI)
         final Item carpaccio = menuHelper.getItem("7285589409963911");
         final OrderItem carpaccioOrderItem = new OrderItemBuilder(carpaccio)
-                .comment("Extra cheese please")
+                .setComment("Extra cheese please")
                 .build();
 
         final Item coke = menuHelper.getItem("1712127355705869");
@@ -74,22 +78,22 @@ public class SubmitOrderExample {
         final double orderItemsPrice = calculator.price(carpaccioOrderItem, cokeOrderItem);
 
         return new OrderBuilder()
-                .developer("org.example")
-                .restaurant(full.restaurant.id)
-                .locale(Locale.fromJavaLocale(java.util.Locale.US))
-                .currency(Currency.getInstance(full.restaurant.currency))
-                .contact(new ContactBuilder()
-                        .firstName("John")
-                        .lastName("Doe")
-                        .phone("+12024561111")
-                        .email("johndoe@example.org")
+                .setDeveloper("org.example")
+                .setRestaurant(full.restaurant.id)
+                .setLocale(Locale.fromJavaLocale(java.util.Locale.US))
+                .setCurrency(Currency.getInstance(full.restaurant.currency))
+                .setContact(new ContactBuilder()
+                        .setFirstName("John")
+                        .setLastName("Doe")
+                        .setPhone("+12024561111")
+                        .setEmail("johndoe@example.org")
                         .build())
-                .dispatch(new PickupBuilder()
+                .setDispatch(new PickupBuilder()
                         .forAsap()
                         .build())
                 .addItem(carpaccioOrderItem)
                 .addItem(cokeOrderItem)
-                .comment("I'm allergic to nuts.")
+                .setComment("I'm allergic to nuts.")
                 .addPayment(new CashPaymentBuilder()
                         .amount(orderItemsPrice)
                         .build())
