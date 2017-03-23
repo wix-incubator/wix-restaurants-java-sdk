@@ -8,6 +8,12 @@ import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationCli
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.*;
 import com.wix.restaurants.olo.Statuses;
+import com.wix.restaurants.reservations.Reservation;
+import com.wix.restaurants.reservations.ReservationsResponse;
+import com.wix.restaurants.reservations.requests.GetReservationRequest;
+import com.wix.restaurants.reservations.requests.QueryUnhandledReservationsRequest;
+import com.wix.restaurants.reservations.requests.SetReservationStatusRequest;
+import com.wix.restaurants.reservations.requests.SubmitReservationRequest;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -135,6 +141,87 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 setOrderStatusRequest, new TypeReference<Response<Order>>() {});
 
         return setOrderStatusResponse;
+    }
+
+    @Override
+    public Reservation submitReservation(String accessToken, Reservation reservation) {
+        final SubmitReservationRequest submitReservationRequest = new SubmitReservationRequest();
+        submitReservationRequest.accessToken = accessToken;
+        submitReservationRequest.reservation = reservation;
+
+        final Reservation submitReservationResponse = request(
+                submitReservationRequest, new TypeReference<Response<Reservation>>() {});
+
+        return submitReservationResponse;
+    }
+
+    @Override
+    public Reservation retrieveReservationAsOwner(String ownerToken, String reservationId) {
+        final GetReservationRequest getReservationRequest = new GetReservationRequest();
+        getReservationRequest.ownerToken = ownerToken;
+        getReservationRequest.reservationId = reservationId;
+        getReservationRequest.viewMode = Actors.customer;
+
+        final Reservation getReservationResponse = request(
+                getReservationRequest, new TypeReference<Response<Reservation>>() {});
+
+        return getReservationResponse;
+    }
+
+    @Override
+    public Reservation retrieveReservationAsRestaurant(String accessToken, String reservationId) {
+        final GetReservationRequest getReservationRequest = new GetReservationRequest();
+        getReservationRequest.accessToken = accessToken;
+        getReservationRequest.reservationId = reservationId;
+        getReservationRequest.viewMode = Actors.restaurant;
+
+        final Reservation getReservationResponse = request(
+                getReservationRequest, new TypeReference<Response<Reservation>>() {});
+
+        return getReservationResponse;
+    }
+
+    @Override
+    public List<Reservation> retrieveUnhandledReservations(String accessToken, String restaurantId) {
+        final QueryUnhandledReservationsRequest queryUnhandledReservationsRequest = new QueryUnhandledReservationsRequest();
+        queryUnhandledReservationsRequest.accessToken = accessToken;
+        queryUnhandledReservationsRequest.organizationId = restaurantId;
+        queryUnhandledReservationsRequest.viewMode = Actors.restaurant;
+
+        final ReservationsResponse queryUnhandledReservationsResponse = request(
+                queryUnhandledReservationsRequest, new TypeReference<Response<ReservationsResponse>>() {});
+
+        return queryUnhandledReservationsResponse.results;
+    }
+
+    @Override
+    public Reservation setReservationStatusAsRestaurant(String accessToken, String reservationId, String status, String comment) {
+        final SetReservationStatusRequest setReservationStatusRequest = new SetReservationStatusRequest();
+        setReservationStatusRequest.accessToken = accessToken;
+        setReservationStatusRequest.reservationId = reservationId;
+        setReservationStatusRequest.status = status;
+        setReservationStatusRequest.actingAs = Actors.restaurant;
+        setReservationStatusRequest.comment = comment;
+
+        final Reservation setReservationStatusResponse = request(
+                setReservationStatusRequest, new TypeReference<Response<Reservation>>() {});
+
+        return setReservationStatusResponse;
+    }
+
+    @Override
+    public Reservation setReservationStatusAsOwner(String ownerToken, String reservationId, String status, String comment) {
+        final SetReservationStatusRequest setReservationStatusRequest = new SetReservationStatusRequest();
+        setReservationStatusRequest.ownerToken = ownerToken;
+        setReservationStatusRequest.reservationId = reservationId;
+        setReservationStatusRequest.status = status;
+        setReservationStatusRequest.actingAs = Actors.customer;
+        setReservationStatusRequest.comment = comment;
+
+        final Reservation setReservationStatusResponse = request(
+                setReservationStatusRequest, new TypeReference<Response<Reservation>>() {});
+
+        return setReservationStatusResponse;
     }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {
