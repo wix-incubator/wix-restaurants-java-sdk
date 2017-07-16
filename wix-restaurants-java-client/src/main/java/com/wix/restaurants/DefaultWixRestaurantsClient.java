@@ -6,6 +6,8 @@ import com.openrest.v1_1.Error;
 import com.openrest.v1_1.*;
 import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
+import com.wix.restaurants.authorization.Role;
+import com.wix.restaurants.authorization.requests.GetRoleRequest;
 import com.wix.restaurants.exceptions.*;
 import com.wix.restaurants.orders.Statuses;
 import com.wix.restaurants.orders.requests.GetOrderRequest;
@@ -104,6 +106,18 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 searchRequest, new TypeReference<Response<SearchResponse>>() {});
 
         return searchResponse.results;
+    }
+
+    @Override
+    public Role getRole(String accessToken, String organizationId) {
+        final GetRoleRequest getRoleRequest = new GetRoleRequest();
+        getRoleRequest.accessToken = accessToken;
+        getRoleRequest.organizationId = organizationId;
+
+        final Role getRoleResponse = request(
+                getRoleRequest, new TypeReference<Response<Role>>() {});
+
+        return getRoleResponse;
     }
 
     @Override

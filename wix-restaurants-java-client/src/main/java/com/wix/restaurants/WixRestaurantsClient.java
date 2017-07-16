@@ -5,6 +5,7 @@ import com.openrest.v1_1.Order;
 import com.openrest.v1_1.RestaurantFullInfo;
 import com.openrest.v1_1.SearchResult;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
+import com.wix.restaurants.authorization.Role;
 import com.wix.restaurants.reservations.Reservation;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public interface WixRestaurantsClient {
     // Business info
     RestaurantFullInfo retrieveRestaurantInfo(String restaurantId);
     List<SearchResult> search(Filter filter, int limit);
+
+    // Authorization
+    Role getRole(String accessToken, String organizationId);
 
     // Orders
     Order submitOrder(String accessToken, Order order);
