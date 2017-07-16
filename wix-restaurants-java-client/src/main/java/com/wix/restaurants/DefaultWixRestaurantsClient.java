@@ -33,12 +33,19 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     private final OpenrestClient openrest;
     private final WixRestaurantsAuthenticationClient authenticationClient;
 
-    public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory, Integer connectTimeout, Integer readTimeout,
-                                       Integer numberOfRetries) {
-        openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, Endpoints.production);
+    public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory,
+                                       Integer connectTimeout, Integer readTimeout, Integer numberOfRetries,
+                                       String authApiUrl, String apiUrl) {
+        openrest = new OpenrestClient(requestFactory, connectTimeout, readTimeout, numberOfRetries, apiUrl);
         authenticationClient = new DefaultWixRestaurantsAuthenticationClient(
-                requestFactory, connectTimeout, readTimeout, numberOfRetries,
-                com.wix.restaurants.authentication.Endpoints.PRODUCTION);
+                requestFactory, connectTimeout, readTimeout, numberOfRetries, authApiUrl);
+    }
+
+    public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory,
+                                       Integer connectTimeout, Integer readTimeout, Integer numberOfRetries) {
+        this(requestFactory, connectTimeout, readTimeout, numberOfRetries,
+                com.wix.restaurants.authentication.Endpoints.PRODUCTION,
+                Endpoints.production);
     }
 
     @Override
