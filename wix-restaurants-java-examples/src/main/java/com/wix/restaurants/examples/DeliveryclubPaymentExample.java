@@ -1,7 +1,5 @@
 package com.wix.restaurants.examples;
 
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.openrest.v1_1.Item;
 import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
@@ -126,8 +124,7 @@ public class DeliveryclubPaymentExample {
     }
 
     public static void main(String[] args) throws Exception {
-        final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(requestFactory, 10000, 30000, 1);
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
 
         new DeliveryclubPaymentExample(wixRestaurants).runExample();
     }

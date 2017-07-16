@@ -2,6 +2,7 @@ package com.wix.restaurants;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.openrest.v1_1.Error;
 import com.openrest.v1_1.*;
 import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
@@ -32,6 +33,51 @@ import java.util.Map;
 public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     private final OpenrestClient openrest;
     private final WixRestaurantsAuthenticationClient authenticationClient;
+
+    public static class Builder {
+        private HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+        private int connectTimeout = 0;
+        private int readTimeout = 0;
+        private int numberOfRetries = 0;
+        private String authApiUrl = com.wix.restaurants.authentication.Endpoints.PRODUCTION;
+        private String apiUrl = Endpoints.production;
+
+        public Builder setRequestFactory(HttpRequestFactory requestFactory) {
+            this.requestFactory = requestFactory;
+            return this;
+        }
+
+        public Builder setConnectTimeout(int connectTimeout) {
+            this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        public Builder setReadTimeout(int readTimeout) {
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
+        public Builder setNumberOfRetries(int numberOfRetries) {
+            this.numberOfRetries = numberOfRetries;
+            return this;
+        }
+
+        public Builder setAuthApiUrl(String authApiUrl) {
+            this.authApiUrl = authApiUrl;
+            return this;
+        }
+
+        public Builder setApiUrl(String apiUrl) {
+            this.apiUrl = apiUrl;
+            return this;
+        }
+
+        public DefaultWixRestaurantsClient build() {
+            return new DefaultWixRestaurantsClient(
+                    requestFactory, connectTimeout, readTimeout, numberOfRetries,
+                    authApiUrl, apiUrl);
+        }
+    }
 
     public DefaultWixRestaurantsClient(HttpRequestFactory requestFactory,
                                        Integer connectTimeout, Integer readTimeout, Integer numberOfRetries,
