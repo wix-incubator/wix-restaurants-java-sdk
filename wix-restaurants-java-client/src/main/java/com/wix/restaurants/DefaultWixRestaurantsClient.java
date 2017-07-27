@@ -316,6 +316,8 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 return new InvalidDataException(e.errorMessage(), e);
             case Error.ERROR_INTERNAL:
                 return new InternalException(e.errorMessage(), e);
+            case Error.ERROR_NOT_FOUND:
+                return new NotFoundException(e.errorMessage(), e);
             default:
                 return new RestaurantsException(e.error() + "|" + e.errorMessage(), e);
         }
