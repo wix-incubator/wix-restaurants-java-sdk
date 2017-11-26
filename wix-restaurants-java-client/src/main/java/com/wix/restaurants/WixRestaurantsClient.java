@@ -1,9 +1,6 @@
 package com.wix.restaurants;
 
-import com.openrest.v1_1.Filter;
-import com.openrest.v1_1.Order;
-import com.openrest.v1_1.RestaurantFullInfo;
-import com.openrest.v1_1.SearchResult;
+import com.openrest.v1_1.*;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authorization.Role;
 import com.wix.restaurants.reservations.Reservation;
@@ -16,6 +13,7 @@ public interface WixRestaurantsClient {
 
     // Business info
     RestaurantFullInfo retrieveRestaurantInfo(String restaurantId);
+    Organization setOrganization(String accessToken, Organization organization);
     List<SearchResult> search(Filter filter, int limit);
 
     // Authorization
@@ -36,4 +34,8 @@ public interface WixRestaurantsClient {
     List<Reservation> retrieveUnhandledReservations(String accessToken, String restaurantId);
     Reservation setReservationStatusAsRestaurant(String accessToken, String reservationId, String status, String comment);
     Reservation setReservationStatusAsOwner(String ownerToken, String reservationId, String status, String comment);
+
+    // Wix integration
+    Organization retrieveOrganizationForInstance(String instanceId);
+    Organization retrieveOrganizationForMetasite(String metasiteId);
 }

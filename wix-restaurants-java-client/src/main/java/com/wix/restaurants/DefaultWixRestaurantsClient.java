@@ -3,8 +3,8 @@ package com.wix.restaurants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.openrest.v1_1.Error;
 import com.openrest.v1_1.*;
+import com.openrest.v1_1.Error;
 import com.wix.restaurants.authentication.DefaultWixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authorization.Role;
@@ -15,9 +15,7 @@ import com.wix.restaurants.orders.requests.GetOrderRequest;
 import com.wix.restaurants.orders.requests.QueryOrdersRequest;
 import com.wix.restaurants.orders.requests.SetOrderStatusRequest;
 import com.wix.restaurants.orders.requests.SubmitOrderRequest;
-import com.wix.restaurants.requests.GetOrganizationFullRequest;
-import com.wix.restaurants.requests.Request;
-import com.wix.restaurants.requests.SearchRequest;
+import com.wix.restaurants.requests.*;
 import com.wix.restaurants.reservations.Reservation;
 import com.wix.restaurants.reservations.ReservationsResponse;
 import com.wix.restaurants.reservations.requests.GetReservationRequest;
@@ -108,6 +106,18 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 getOrganizationFullRequest, new TypeReference<Response<RestaurantFullInfo>>() {});
 
         return getOrganizationFullResponse;
+    }
+
+    @Override
+    public Organization setOrganization(String accessToken, Organization organization) {
+        final SetOrganizationRequest setOrganizationRequest = new SetOrganizationRequest();
+        setOrganizationRequest.accessToken = accessToken;
+        setOrganizationRequest.organization = organization;
+
+        final Organization setOrganizationResponse = request(
+                setOrganizationRequest, new TypeReference<Response<Organization>>() {});
+
+        return setOrganizationResponse;
     }
 
     @Override
@@ -296,6 +306,33 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 setReservationStatusRequest, new TypeReference<Response<Reservation>>() {});
 
         return setReservationStatusResponse;
+    }
+
+    @Override
+    public Organization retrieveOrganizationForInstance(String instanceId) {
+        final GetAppMappedObjectRequest getAppMappedObjectRequest = new GetAppMappedObjectRequest();
+        getAppMappedObjectRequest.appId = new AppId();
+        getAppMappedObjectRequest.appId.platform = AppId.NS_WIX;
+        getAppMappedObjectRequest.appId.id = instanceId;
+        getAppMappedObjectRequest.appId.version = "1";
+        getAppMappedObjectRequest.full = false;
+
+        final Organization getAppMappedObjectResponse = request(
+                getAppMappedObjectRequest, new TypeReference<Response<Organization>>() {});
+
+        return getAppMappedObjectResponse;
+    }
+
+    @Override
+    public Organization retrieveOrganizationForMetasite(String metasiteId) {
+        final GetWixMetasiteOrganizationRequest getWixMetasiteOrganizationRequest = new GetWixMetasiteOrganizationRequest();
+        getWixMetasiteOrganizationRequest.metasiteId = metasiteId;
+        getWixMetasiteOrganizationRequest.full = false;
+
+        final Organization getWixMetasiteOrganizationResponse = request(
+                getWixMetasiteOrganizationRequest, new TypeReference<Response<Organization>>() {});
+
+        return getWixMetasiteOrganizationResponse;
     }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {
