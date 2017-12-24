@@ -10,6 +10,7 @@ import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authorization.Role;
 import com.wix.restaurants.authorization.requests.GetRoleRequest;
 import com.wix.restaurants.exceptions.*;
+import com.wix.restaurants.i18n.Locale;
 import com.wix.restaurants.orders.Statuses;
 import com.wix.restaurants.orders.requests.GetOrderRequest;
 import com.wix.restaurants.orders.requests.QueryOrdersRequest;
@@ -169,6 +170,16 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 searchRequest, new TypeReference<Response<SearchResponse>>() {});
 
         return searchResponse.results;
+    }
+
+    @Override
+    public void changeOrganizationLocale(String accessToken, String organizationId, Locale locale) {
+        final ChangeOrganizationLocaleRequest changeOrganizationLocaleRequest = new ChangeOrganizationLocaleRequest();
+        changeOrganizationLocaleRequest.accessToken = accessToken;
+        changeOrganizationLocaleRequest.organizationId = organizationId;
+        changeOrganizationLocaleRequest.locale = locale;
+
+        request(changeOrganizationLocaleRequest, new TypeReference<Response<Object>>() {});
     }
 
     @Override
