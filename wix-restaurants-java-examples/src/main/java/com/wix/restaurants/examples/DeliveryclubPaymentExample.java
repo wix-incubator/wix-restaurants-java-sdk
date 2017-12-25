@@ -5,7 +5,6 @@ import com.openrest.v1_1.Order;
 import com.openrest.v1_1.OrderItem;
 import com.openrest.v1_1.RestaurantFullInfo;
 import com.wix.restaurants.DefaultWixRestaurantsClient;
-import com.wix.restaurants.WixAppIds;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.builders.ContactBuilder;
@@ -49,10 +48,10 @@ public class DeliveryclubPaymentExample {
         // Some internal reference for the payment, e.g. order ID in delivery-club.ru
         final String reference = "example-reference";
 
-        // 1. Login with username and password to get an access token (required for this payment type)
+        // 1. Login with Wix Instance to get an access token (required for this payment type)
         System.out.print("Authenticating...");
         final WixRestaurantsAuthenticationClient authentication = wixRestaurants.getAuthenticationClient();
-        final String accessToken = authentication.loginWithWixInstance(WixAppIds.WIX_RESTAURANTS_ORDERS, wixInstance).accessToken;
+        final String accessToken = authentication.loginWithWixInstance(wixInstance).accessToken;
         System.out.println(" done (accessToken: " + accessToken + ").");
 
         // 2. Retrieve Menu
