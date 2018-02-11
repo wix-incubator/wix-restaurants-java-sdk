@@ -320,6 +320,16 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public void mapInstance(String accessToken, String instanceId, String organizationId) {
+        final SetWixAppMappingRequest setWixAppMappingRequest = new SetWixAppMappingRequest();
+        setWixAppMappingRequest.accessToken = accessToken;
+        setWixAppMappingRequest.instanceId = instanceId;
+        setWixAppMappingRequest.organizationId = organizationId;
+
+        request(setWixAppMappingRequest, new TypeReference<Response<Object>>() {});
+    }
+
+    @Override
     public Organization retrieveOrganizationForInstance(String instanceId) {
         final GetAppMappedObjectRequest getAppMappedObjectRequest = new GetAppMappedObjectRequest();
         getAppMappedObjectRequest.appId = new AppId();
@@ -344,6 +354,15 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
                 getWixMetasiteOrganizationRequest, new TypeReference<Response<Organization>>() {});
 
         return getWixMetasiteOrganizationResponse;
+    }
+
+    @Override
+    public void deleteOrganization(String accessToken, String organizationId) {
+        final DeleteOrganizationRequest deleteOrganizationRequest = new DeleteOrganizationRequest();
+        deleteOrganizationRequest.accessToken = accessToken;
+        deleteOrganizationRequest.organizationId = organizationId;
+
+        request(deleteOrganizationRequest, new TypeReference<Response<Object>>() {});
     }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {

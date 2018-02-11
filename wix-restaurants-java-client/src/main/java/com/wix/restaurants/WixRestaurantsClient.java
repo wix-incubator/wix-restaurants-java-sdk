@@ -38,6 +38,10 @@ public interface WixRestaurantsClient {
     Reservation setReservationStatusAsOwner(String ownerToken, String reservationId, String status, String comment);
 
     // Wix integration
+    void mapInstance(String accessToken, String instanceId, String organizationId);
     Organization retrieveOrganizationForInstance(String instanceId);
     Organization retrieveOrganizationForMetasite(String metasiteId);
+
+    // GDPR
+    void deleteOrganization(String accessToken, String organizationId);
 }
