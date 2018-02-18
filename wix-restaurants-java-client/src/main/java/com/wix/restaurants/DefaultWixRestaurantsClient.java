@@ -26,6 +26,7 @@ import com.wix.restaurants.reservations.requests.SubmitReservationRequest;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -203,6 +204,23 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         queryOrdersRequest.status = Statuses.new_;
         queryOrdersRequest.ordering = "asc";
         queryOrdersRequest.limit = Integer.MAX_VALUE;
+
+        final OrdersResponse queryOrdersResponse = request(
+                queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
+
+        return queryOrdersResponse.results;
+    }
+
+    @Override
+    public List<Order> retrieveOrdersByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit) {
+        final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
+        queryOrdersRequest.accessToken = accessToken;
+        queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
+        queryOrdersRequest.clientId = new ClientId(ClientId.NS_PHONE, phone, null, false);
+        queryOrdersRequest.viewMode = Actors.restaurant;
+        queryOrdersRequest.ordering = "asc";
+        queryOrdersRequest.since = modifiedSince;
+        queryOrdersRequest.limit = limit;
 
         final OrdersResponse queryOrdersResponse = request(
                 queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
