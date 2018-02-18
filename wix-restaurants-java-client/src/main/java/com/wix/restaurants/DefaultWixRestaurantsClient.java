@@ -229,6 +229,23 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public List<Order> retrieveOrdersByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit) {
+        final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
+        queryOrdersRequest.accessToken = accessToken;
+        queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
+        queryOrdersRequest.clientId = new ClientId("email", email, null, false);
+        queryOrdersRequest.viewMode = Actors.restaurant;
+        queryOrdersRequest.ordering = "asc";
+        queryOrdersRequest.since = modifiedSince;
+        queryOrdersRequest.limit = limit;
+
+        final OrdersResponse queryOrdersResponse = request(
+                queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
+
+        return queryOrdersResponse.results;
+    }
+
+    @Override
     public Order acceptOrder(String accessToken, String orderId, Map<String, String> externalIds) {
         final SetOrderStatusRequest setOrderStatusRequest = new SetOrderStatusRequest();
         setOrderStatusRequest.accessToken = accessToken;

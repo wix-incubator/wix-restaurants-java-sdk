@@ -44,6 +44,22 @@ public interface WixRestaurantsClient {
      */
     List<Order> retrieveOrdersByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit);
 
+    /**
+     * Retrieves a batch of orders associated with the given customer email.
+     *
+     * Orders are returned in ascending order, by modification date. Paging can be done by setting a limit (say, 100),
+     * starting with a null modifiedSince, and iteratively setting modifiedSince to last returned order's modification
+     * date + epsilon, as long as the number of results equals the limit.
+     *
+     * @param accessToken    Access token with permissions to the restaurant.
+     * @param restaurantId   The restaurant's identifier.
+     * @param email          Customer email.
+     * @param modifiedSince  Minimum modification date to return, or null for oldest.
+     * @param limit          Maximum number of orders to return, or null for no limit.
+     * @return a list of orders.
+     */
+    List<Order> retrieveOrdersByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit);
+
     Order acceptOrder(String accessToken, String orderId, Map<String, String> externalIds);
     Order rejectOrder(String accessToken, String orderId, String comment);
 
