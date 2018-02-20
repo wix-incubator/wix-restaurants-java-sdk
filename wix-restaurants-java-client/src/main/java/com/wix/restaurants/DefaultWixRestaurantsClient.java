@@ -355,6 +355,18 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public List<Reservation> retrieveReservationsByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit) {
+        // TODO: implement
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Reservation> retrieveReservationsByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit) {
+        // TODO: implement
+        return Collections.emptyList();
+    }
+
+    @Override
     public void mapInstance(String accessToken, String instanceId, String organizationId) {
         final SetWixAppMappingRequest setWixAppMappingRequest = new SetWixAppMappingRequest();
         setWixAppMappingRequest.accessToken = accessToken;
@@ -398,6 +410,16 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
         deleteOrganizationRequest.organizationId = organizationId;
 
         request(deleteOrganizationRequest, new TypeReference<Response<Object>>() {});
+    }
+
+    @Override
+    public void deleteCustomerByPhone(String accessToken, String organizationId, String phone) {
+        // TODO: implement
+    }
+
+    @Override
+    public void deleteCustomerByEmail(String accessToken, String organizationId, String email) {
+        // TODO: implement
     }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {

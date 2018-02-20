@@ -71,6 +71,38 @@ public interface WixRestaurantsClient {
     Reservation setReservationStatusAsRestaurant(String accessToken, String reservationId, String status, String comment);
     Reservation setReservationStatusAsOwner(String ownerToken, String reservationId, String status, String comment);
 
+    /**
+     * Retrieves a batch of reservations associated with the given customer phone number.
+     *
+     * Reservations are returned in ascending order, by modification date. Paging can be done by setting a limit (say, 100),
+     * starting with a null modifiedSince, and iteratively setting modifiedSince to last returned reservation's modification
+     * date + epsilon, as long as the number of results equals the limit.
+     *
+     * @param accessToken    Access token with permissions to the restaurant.
+     * @param restaurantId   The restaurant's identifier.
+     * @param phone          Customer phone number in standard E.164 format.
+     * @param modifiedSince  Minimum modification date to return, or null for oldest.
+     * @param limit          Maximum number of reservations to return, or null for no limit.
+     * @return a list of reservations.
+     */
+    List<Reservation> retrieveReservationsByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit);
+
+    /**
+     * Retrieves a batch of reservations associated with the given customer email.
+     *
+     * Reservations are returned in ascending order, by modification date. Paging can be done by setting a limit (say, 100),
+     * starting with a null modifiedSince, and iteratively setting modifiedSince to last returned reservation's modification
+     * date + epsilon, as long as the number of results equals the limit.
+     *
+     * @param accessToken    Access token with permissions to the restaurant.
+     * @param restaurantId   The restaurant's identifier.
+     * @param email          Customer email.
+     * @param modifiedSince  Minimum modification date to return, or null for oldest.
+     * @param limit          Maximum number of reservations to return, or null for no limit.
+     * @return a list of reservations.
+     */
+    List<Reservation> retrieveReservationsByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit);
+
     // Wix integration
     void mapInstance(String accessToken, String instanceId, String organizationId);
     Organization retrieveOrganizationForInstance(String instanceId);
@@ -78,4 +110,6 @@ public interface WixRestaurantsClient {
 
     // GDPR
     void deleteOrganization(String accessToken, String organizationId);
+    void deleteCustomerByPhone(String accessToken, String organizationId, String phone);
+    void deleteCustomerByEmail(String accessToken, String organizationId, String email);
 }
