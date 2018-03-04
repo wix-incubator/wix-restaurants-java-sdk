@@ -12,17 +12,11 @@ import com.wix.restaurants.authorization.requests.GetRoleRequest;
 import com.wix.restaurants.exceptions.*;
 import com.wix.restaurants.i18n.Locale;
 import com.wix.restaurants.orders.Statuses;
-import com.wix.restaurants.orders.requests.GetOrderRequest;
-import com.wix.restaurants.orders.requests.QueryOrdersRequest;
-import com.wix.restaurants.orders.requests.SetOrderStatusRequest;
-import com.wix.restaurants.orders.requests.SubmitOrderRequest;
+import com.wix.restaurants.orders.requests.*;
 import com.wix.restaurants.requests.*;
 import com.wix.restaurants.reservations.Reservation;
 import com.wix.restaurants.reservations.ReservationsResponse;
-import com.wix.restaurants.reservations.requests.GetReservationRequest;
-import com.wix.restaurants.reservations.requests.QueryUnhandledReservationsRequest;
-import com.wix.restaurants.reservations.requests.SetReservationStatusRequest;
-import com.wix.restaurants.reservations.requests.SubmitReservationRequest;
+import com.wix.restaurants.reservations.requests.*;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -212,37 +206,33 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
-    public List<Order> retrieveOrdersByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit) {
-        final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
-        queryOrdersRequest.accessToken = accessToken;
-        queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
-        queryOrdersRequest.clientId = new ClientId(ClientId.NS_PHONE, phone, null, false);
-        queryOrdersRequest.viewMode = Actors.restaurant;
-        queryOrdersRequest.ordering = "asc";
-        queryOrdersRequest.since = modifiedSince;
-        queryOrdersRequest.limit = limit;
+    public List<Order> retrieveOrdersByPhone(String accessToken, String organizationId, String phone, Date modifiedSince, Integer limit) {
+        final QueryCustomerOrdersRequest queryCustomerOrdersRequest = new QueryCustomerOrdersRequest();
+        queryCustomerOrdersRequest.accessToken = accessToken;
+        queryCustomerOrdersRequest.organizationId = organizationId;
+        queryCustomerOrdersRequest.customerId = customerByPhone(phone);
+        queryCustomerOrdersRequest.modifiedSince = modifiedSince;
+        queryCustomerOrdersRequest.limit = limit;
 
-        final OrdersResponse queryOrdersResponse = request(
-                queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
+        final OrdersResponse queryCustomerOrdersResponse = request(
+                queryCustomerOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
 
-        return queryOrdersResponse.results;
+        return queryCustomerOrdersResponse.results;
     }
 
     @Override
-    public List<Order> retrieveOrdersByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit) {
-        final QueryOrdersRequest queryOrdersRequest = new QueryOrdersRequest();
-        queryOrdersRequest.accessToken = accessToken;
-        queryOrdersRequest.restaurantIds = Collections.singleton(restaurantId);
-        queryOrdersRequest.clientId = new ClientId("email", email, null, false);
-        queryOrdersRequest.viewMode = Actors.restaurant;
-        queryOrdersRequest.ordering = "asc";
-        queryOrdersRequest.since = modifiedSince;
-        queryOrdersRequest.limit = limit;
+    public List<Order> retrieveOrdersByEmail(String accessToken, String organizationId, String email, Date modifiedSince, Integer limit) {
+        final QueryCustomerOrdersRequest queryCustomerOrdersRequest = new QueryCustomerOrdersRequest();
+        queryCustomerOrdersRequest.accessToken = accessToken;
+        queryCustomerOrdersRequest.organizationId = organizationId;
+        queryCustomerOrdersRequest.customerId = customerByEmail(email);
+        queryCustomerOrdersRequest.modifiedSince = modifiedSince;
+        queryCustomerOrdersRequest.limit = limit;
 
-        final OrdersResponse queryOrdersResponse = request(
-                queryOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
+        final OrdersResponse queryCustomerOrdersResponse = request(
+                queryCustomerOrdersRequest, new TypeReference<Response<OrdersResponse>>() {});
 
-        return queryOrdersResponse.results;
+        return queryCustomerOrdersResponse.results;
     }
 
     @Override
@@ -355,15 +345,33 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
-    public List<Reservation> retrieveReservationsByPhone(String accessToken, String restaurantId, String phone, Date modifiedSince, Integer limit) {
-        // TODO: implement
-        return Collections.emptyList();
+    public List<Reservation> retrieveReservationsByPhone(String accessToken, String organizationId, String phone, Date modifiedSince, Integer limit) {
+        final QueryCustomerReservationsRequest queryCustomerReservationsRequest = new QueryCustomerReservationsRequest();
+        queryCustomerReservationsRequest.accessToken = accessToken;
+        queryCustomerReservationsRequest.organizationId = organizationId;
+        queryCustomerReservationsRequest.customerId = customerByPhone(phone);
+        queryCustomerReservationsRequest.modifiedSince = modifiedSince;
+        queryCustomerReservationsRequest.limit = limit;
+
+        final ReservationsResponse queryCustomerReservationsResponse = request(
+                queryCustomerReservationsRequest, new TypeReference<Response<ReservationsResponse>>() {});
+
+        return queryCustomerReservationsResponse.results;
     }
 
     @Override
-    public List<Reservation> retrieveReservationsByEmail(String accessToken, String restaurantId, String email, Date modifiedSince, Integer limit) {
-        // TODO: implement
-        return Collections.emptyList();
+    public List<Reservation> retrieveReservationsByEmail(String accessToken, String organizationId, String email, Date modifiedSince, Integer limit) {
+        final QueryCustomerReservationsRequest queryCustomerReservationsRequest = new QueryCustomerReservationsRequest();
+        queryCustomerReservationsRequest.accessToken = accessToken;
+        queryCustomerReservationsRequest.organizationId = organizationId;
+        queryCustomerReservationsRequest.customerId = customerByEmail(email);
+        queryCustomerReservationsRequest.modifiedSince = modifiedSince;
+        queryCustomerReservationsRequest.limit = limit;
+
+        final ReservationsResponse queryCustomerReservationsResponse = request(
+                queryCustomerReservationsRequest, new TypeReference<Response<ReservationsResponse>>() {});
+
+        return queryCustomerReservationsResponse.results;
     }
 
     @Override
@@ -414,12 +422,22 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
 
     @Override
     public void deleteCustomerByPhone(String accessToken, String organizationId, String phone) {
-        // TODO: implement
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest();
+        deleteCustomerRequest.accessToken = accessToken;
+        deleteCustomerRequest.organizationId = organizationId;
+        deleteCustomerRequest.customerId = customerByPhone(phone);
+
+        request(deleteCustomerRequest, new TypeReference<Response<Object>>() {});
     }
 
     @Override
     public void deleteCustomerByEmail(String accessToken, String organizationId, String email) {
-        // TODO: implement
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest();
+        deleteCustomerRequest.accessToken = accessToken;
+        deleteCustomerRequest.organizationId = organizationId;
+        deleteCustomerRequest.customerId = customerByEmail(email);
+
+        request(deleteCustomerRequest, new TypeReference<Response<Object>>() {});
     }
 
     private <T> T request(Request request, TypeReference<Response<T>> responseType) {
@@ -445,5 +463,13 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
             default:
                 return new RestaurantsException(e.error() + "|" + e.errorMessage(), e);
         }
+    }
+
+    private static ClientId customerByPhone(String phone) {
+        return new ClientId(ClientNamespaces.phone, phone, null, false);
+    }
+
+    private static ClientId customerByEmail(String email) {
+        return new ClientId(ClientNamespaces.email, email, null, false);
     }
 }
