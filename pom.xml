@@ -65,7 +65,7 @@
 	
 
     <properties>
-		<openrest4j.version>1.29.0</openrest4j.version>
+		<openrest4j.version>1.30.0</openrest4j.version>
 		<com.wix.restaurants.availability.version>1.8.0</com.wix.restaurants.availability.version>
 		<com.wix.restaurants.authentication.version>1.6.0</com.wix.restaurants.authentication.version>
     </properties>
