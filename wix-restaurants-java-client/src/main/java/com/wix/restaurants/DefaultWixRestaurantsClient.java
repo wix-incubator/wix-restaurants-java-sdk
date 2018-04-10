@@ -385,6 +385,16 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public void mapInstanceWithWixInstance(String instance, String instanceId, String organizationId) {
+        final SetWixAppMappingRequest setWixAppMappingRequest = new SetWixAppMappingRequest();
+        setWixAppMappingRequest.instance = instance;
+        setWixAppMappingRequest.instanceId = instanceId;
+        setWixAppMappingRequest.organizationId = organizationId;
+
+        request(setWixAppMappingRequest, new TypeReference<Response<Object>>() {});
+    }
+
+    @Override
     public Organization retrieveOrganizationForInstance(String instanceId) {
         final GetAppMappedObjectRequest getAppMappedObjectRequest = new GetAppMappedObjectRequest();
         getAppMappedObjectRequest.appId = new AppId();

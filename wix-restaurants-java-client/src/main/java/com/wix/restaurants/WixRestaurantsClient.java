@@ -105,6 +105,7 @@ public interface WixRestaurantsClient {
 
     // Wix integration
     void mapInstance(String accessToken, String instanceId, String organizationId);
+    void mapInstanceWithWixInstance(String instance, String instanceId, String organizationId);
     Organization retrieveOrganizationForInstance(String instanceId);
     Organization retrieveOrganizationForMetasite(String metasiteId);
 
