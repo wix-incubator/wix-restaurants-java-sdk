@@ -410,18 +410,6 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
-    public Organization retrieveOrganizationForMetasite(String metasiteId) {
-        final GetWixMetasiteOrganizationRequest getWixMetasiteOrganizationRequest = new GetWixMetasiteOrganizationRequest();
-        getWixMetasiteOrganizationRequest.metasiteId = metasiteId;
-        getWixMetasiteOrganizationRequest.full = false;
-
-        final Organization getWixMetasiteOrganizationResponse = request(
-                getWixMetasiteOrganizationRequest, new TypeReference<Response<Organization>>() {});
-
-        return getWixMetasiteOrganizationResponse;
-    }
-
-    @Override
     public void deleteOrganization(String accessToken, String organizationId) {
         final DeleteOrganizationRequest deleteOrganizationRequest = new DeleteOrganizationRequest();
         deleteOrganizationRequest.accessToken = accessToken;
