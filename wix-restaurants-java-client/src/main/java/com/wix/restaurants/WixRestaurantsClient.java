@@ -15,6 +15,7 @@ public interface WixRestaurantsClient {
 
     // Business info
     RestaurantFullInfo retrieveRestaurantInfo(String restaurantId);
+    Organization retrieveOrganization(String organizationId);
     Organization setOrganization(String accessToken, Organization organization);
     List<SearchResult> search(Filter filter, int limit);
     void changeOrganizationLocale(String accessToken, String organizationId, Locale locale);

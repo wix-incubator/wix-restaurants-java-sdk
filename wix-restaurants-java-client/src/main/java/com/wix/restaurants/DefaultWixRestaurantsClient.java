@@ -105,6 +105,17 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
     }
 
     @Override
+    public Organization retrieveOrganization(String organizationId) {
+        final GetOrganizationRequest getOrganizationRequest = new GetOrganizationRequest();
+        getOrganizationRequest.organizationId = organizationId;
+
+        final Organization getOrganizationResponse = request(
+                getOrganizationRequest, new TypeReference<Response<Organization>>() {});
+
+        return getOrganizationResponse;
+    }
+
+    @Override
     public Organization setOrganization(String accessToken, Organization organization) {
         final SetOrganizationRequest setOrganizationRequest = new SetOrganizationRequest();
         setOrganizationRequest.accessToken = accessToken;
