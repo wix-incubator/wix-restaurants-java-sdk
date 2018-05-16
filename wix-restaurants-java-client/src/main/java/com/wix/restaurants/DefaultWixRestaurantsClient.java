@@ -288,28 +288,12 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
 
     @Override
     public Reservation retrieveReservationAsOwner(String ownerToken, String reservationId) {
-        final GetReservationRequest getReservationRequest = new GetReservationRequest();
-        getReservationRequest.ownerToken = ownerToken;
-        getReservationRequest.reservationId = reservationId;
-        getReservationRequest.viewMode = Actors.customer;
-
-        final Reservation getReservationResponse = request(
-                getReservationRequest, new TypeReference<Response<Reservation>>() {});
-
-        return getReservationResponse;
+        throw new RestaurantsException("deprecated, use API v2");
     }
 
     @Override
     public Reservation retrieveReservationAsRestaurant(String accessToken, String reservationId) {
-        final GetReservationRequest getReservationRequest = new GetReservationRequest();
-        getReservationRequest.accessToken = accessToken;
-        getReservationRequest.reservationId = reservationId;
-        getReservationRequest.viewMode = Actors.restaurant;
-
-        final Reservation getReservationResponse = request(
-                getReservationRequest, new TypeReference<Response<Reservation>>() {});
-
-        return getReservationResponse;
+        throw new RestaurantsException("deprecated, use API v2");
     }
 
     @Override
