@@ -276,14 +276,7 @@ public class DefaultWixRestaurantsClient implements WixRestaurantsClient {
 
     @Override
     public Reservation submitReservation(String accessToken, Reservation reservation) {
-        final SubmitReservationRequest submitReservationRequest = new SubmitReservationRequest();
-        submitReservationRequest.accessToken = accessToken;
-        submitReservationRequest.reservation = reservation;
-
-        final Reservation submitReservationResponse = request(
-                submitReservationRequest, new TypeReference<Response<Reservation>>() {});
-
-        return submitReservationResponse;
+        throw new RestaurantsException("deprecated, use API v2");
     }
 
     @Override
