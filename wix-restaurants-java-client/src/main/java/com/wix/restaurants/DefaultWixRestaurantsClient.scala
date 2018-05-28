@@ -215,7 +215,7 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
     val request = Get(s"$api2Url/organizations/$organizationId/reservations?viewMode=${Actors.restaurant}&user=${Namespaces.phone}:${URLEncoder.encode(phone, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Reservations](client.execute(request) withResult[Reservation](), actualReadTimeout).results
+    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
   }
 
   override def retrieveReservationsByEmail(accessToken: String, organizationId: String, email: String, modifiedSince: Date, limit: Integer): JList[Reservation] = {
