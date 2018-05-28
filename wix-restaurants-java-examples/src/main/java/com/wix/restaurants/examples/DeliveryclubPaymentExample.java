@@ -122,7 +122,7 @@ public class DeliveryclubPaymentExample {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
 
         new DeliveryclubPaymentExample(wixRestaurants).runExample();

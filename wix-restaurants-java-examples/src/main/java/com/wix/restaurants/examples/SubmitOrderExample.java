@@ -52,7 +52,7 @@ public class SubmitOrderExample {
 
         // 4. Query Order status
         System.out.print("Retrieving order...");
-        final Order retrievedOrder = wixRestaurants.retrieveOrderAsOwner(submittedOrder.id, submittedOrder.ownerToken);
+        final Order retrievedOrder = wixRestaurants.retrieveOrderAsOwner(submittedOrder.ownerToken, submittedOrder.restaurantId, submittedOrder.id);
         System.out.println(" done (status: " + retrievedOrder.status + ").");
     }
 

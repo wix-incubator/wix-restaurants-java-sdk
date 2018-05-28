@@ -55,7 +55,7 @@ public class RetrieveNewOrdersExample {
             // argument. Otherwise, an empty map should be used.
             final Map<String, String> externalIds = Collections.singletonMap("org.example.pos", "SOME-POS-ORDER-ID");
 
-            wixRestaurants.acceptOrder(accessToken, newOrder.id, externalIds);
+            wixRestaurants.acceptOrder(accessToken, restaurantId, newOrder.id, externalIds);
         }
     }
 

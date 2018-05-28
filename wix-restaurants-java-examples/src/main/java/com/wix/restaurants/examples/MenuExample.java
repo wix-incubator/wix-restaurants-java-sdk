@@ -61,9 +61,9 @@ public class MenuExample {
 
                     // Item image, resized to 100 pixels. For additional transformations,
                     // @see <a href="https://cloud.google.com/appengine/docs/java/images/">Images Java API Overview</a>
-                    final Blob imageBlob = item.blobs.get(BlobTypes.BLOB_TYPE_LOGO);
-                    if (imageBlob != null) {
-                        System.out.print(" - " + resize(imageBlob.url, 100));
+                    final String imageUrl = item.media.get(BlobTypes.BLOB_TYPE_LOGO);
+                    if (imageUrl != null) {
+                        System.out.print(" - " + resize(imageUrl, 100));
                     }
 
                     System.out.println();
@@ -104,7 +104,7 @@ public class MenuExample {
         return String.format("%s=s%d", imageUrl, size);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
 
         new MenuExample(wixRestaurants).runExample();

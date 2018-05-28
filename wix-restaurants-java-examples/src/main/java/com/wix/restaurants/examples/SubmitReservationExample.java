@@ -49,7 +49,8 @@ public class SubmitReservationExample {
 
         // 4. Query reservation status
         System.out.print("Retrieving reservation...");
-        final Reservation retrievedReservation = wixRestaurants.retrieveReservationAsOwner(submittedReservation.ownerToken, submittedReservation.id);
+        final Reservation retrievedReservation = wixRestaurants.retrieveReservationAsOwner(
+                submittedReservation.ownerToken, submittedReservation.restaurantId, submittedReservation.id);
         System.out.println(" done (status: " + retrievedReservation.status + ").");
     }
 

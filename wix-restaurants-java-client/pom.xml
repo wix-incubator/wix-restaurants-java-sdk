@@ -42,6 +42,11 @@
             <artifactId>wix-restaurants-authentication-client</artifactId>
             <version>${com.wix.restaurants.authentication.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.wix.rest</groupId>
+            <artifactId>rest-rfc7807-client</artifactId>
+            <version>${com.wix.rest.rest-rfc7807.version}</version>
+        </dependency>
 
 		<!-- Compile/runtime dependencies -->
         <dependency>
