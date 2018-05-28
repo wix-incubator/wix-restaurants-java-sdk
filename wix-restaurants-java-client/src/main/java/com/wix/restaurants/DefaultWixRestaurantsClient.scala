@@ -130,7 +130,7 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
     val request = Get(s"$api2Url/organizations/$organizationId/orders?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Orders](client.execute(request) withResult[Reservations](), actualReadTimeout).results
+    Await.result[Orders](client.execute(request) withResult[Orders](), actualReadTimeout).results
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
