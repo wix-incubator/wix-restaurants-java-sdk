@@ -15,16 +15,15 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.openrest.v1_1._
 import com.wix.rest.rfc7807.api.model.ErrorResponse
 import com.wix.rest.rfc7807.client.AkkaRestClient
-import com.wix.restaurants.authentication.model.Namespaces
+import com.wix.restaurants.authentication.model.{Namespaces, User => AuthenticationUser}
 import com.wix.restaurants.authentication.{DefaultWixRestaurantsAuthenticationClient, WixRestaurantsAuthenticationClient}
 import com.wix.restaurants.authorization.{AuthorizationClient, DefaultAuthorizationClient}
 import com.wix.restaurants.exceptions._
 import com.wix.restaurants.i18n.Locale
 import com.wix.restaurants.json.Json
-import com.wix.restaurants.orders.requests.QueryCustomerOrdersRequest
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
 import com.wix.restaurants.requests.{DeleteCustomerRequest, Request, SearchRequest}
-import com.wix.restaurants.reservations.requests.{QueryCustomerReservationsRequest, QueryUnhandledReservationsRequest}
+import com.wix.restaurants.reservations.requests.QueryUnhandledReservationsRequest
 import com.wix.restaurants.reservations.{Reservation, Reservations, ReservationsResponse, Statuses => ReservationStatuses}
 
 import scala.concurrent.duration._
@@ -119,29 +118,19 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   override def retrieveOrdersByPhone(accessToken: String, organizationId: String, phone: String, modifiedSince: Date, limit: Integer): JList[Order] = {
-    val queryCustomerOrdersRequest = new QueryCustomerOrdersRequest
-    queryCustomerOrdersRequest.accessToken = accessToken
-    queryCustomerOrdersRequest.organizationId = organizationId
-    queryCustomerOrdersRequest.customerId = customerByPhone(phone)
-    queryCustomerOrdersRequest.modifiedSince = modifiedSince
-    queryCustomerOrdersRequest.limit = limit
-
-    val queryCustomerOrdersResponse = apiV1Request(queryCustomerOrdersRequest, new TypeReference[Response[OrdersResponse]]() {})
-
-    queryCustomerOrdersResponse.results
+    retrieveUserOrders(accessToken, organizationId, new AuthenticationUser(Namespaces.phone, phone), modifiedSince, limit)
   }
 
   override def retrieveOrdersByEmail(accessToken: String, organizationId: String, email: String, modifiedSince: Date, limit: Integer): JList[Order] = {
-    val queryCustomerOrdersRequest = new QueryCustomerOrdersRequest
-    queryCustomerOrdersRequest.accessToken = accessToken
-    queryCustomerOrdersRequest.organizationId = organizationId
-    queryCustomerOrdersRequest.customerId = customerByEmail(email)
-    queryCustomerOrdersRequest.modifiedSince = modifiedSince
-    queryCustomerOrdersRequest.limit = limit
+    retrieveUserOrders(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email), modifiedSince, limit)
+  }
 
-    val queryCustomerOrdersResponse = apiV1Request(queryCustomerOrdersRequest, new TypeReference[Response[OrdersResponse]]() {})
-
-    queryCustomerOrdersResponse.results
+  private def retrieveUserOrders(accessToken: String, organizationId: String, user: AuthenticationUser, modifiedSince: Date, limit: Integer): JList[Order] = {
+    val modifiedSinceTimestamp = Option(modifiedSince).map { _.getTime }.getOrElse(0L)
+    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
+    val request = Get(s"$api2Url/organizations/$organizationId/orders?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result[Orders](client.execute(request) withResult[Reservations](), actualReadTimeout).results
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
@@ -211,25 +200,19 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   override def retrieveReservationsByPhone(accessToken: String, organizationId: String, phone: String, modifiedSince: Date, limit: Integer): JList[Reservation] = {
-    val modifiedSinceTimestamp = Option(modifiedSince).map { _.getTime }.getOrElse(0L)
-    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
-    val request = Get(s"$api2Url/organizations/$organizationId/reservations?viewMode=${Actors.restaurant}&user=${Namespaces.phone}:${URLEncoder.encode(phone, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
-      .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
+    retrieveUserReservations(accessToken, organizationId, new AuthenticationUser(Namespaces.phone, phone), modifiedSince, limit)
   }
 
   override def retrieveReservationsByEmail(accessToken: String, organizationId: String, email: String, modifiedSince: Date, limit: Integer): JList[Reservation] = {
-    val queryCustomerReservationsRequest = new QueryCustomerReservationsRequest
-    queryCustomerReservationsRequest.accessToken = accessToken
-    queryCustomerReservationsRequest.organizationId = organizationId
-    queryCustomerReservationsRequest.customerId = customerByEmail(email)
-    queryCustomerReservationsRequest.modifiedSince = modifiedSince
-    queryCustomerReservationsRequest.limit = limit
+    retrieveUserReservations(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email), modifiedSince, limit)
+  }
 
-    val queryCustomerReservationsResponse = apiV1Request(queryCustomerReservationsRequest, new TypeReference[Response[ReservationsResponse]]() {})
-
-    queryCustomerReservationsResponse.results
-
+  private def retrieveUserReservations(accessToken: String, organizationId: String, user: AuthenticationUser, modifiedSince: Date, limit: Integer): JList[Reservation] = {
+    val modifiedSinceTimestamp = Option(modifiedSince).map { _.getTime }.getOrElse(0L)
+    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
+    val request = Get(s"$api2Url/organizations/$organizationId/reservations?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
   }
 
   override def deleteOrganization(accessToken: String, organizationId: String): Unit = {
