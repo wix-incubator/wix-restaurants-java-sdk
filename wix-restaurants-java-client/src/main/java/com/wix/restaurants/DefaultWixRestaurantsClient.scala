@@ -117,6 +117,18 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     Await.result(client.execute(request) withResult[Secrets](), actualReadTimeout)
   }
 
+  override def getMenu(accessToken: String , restaurantId: String): Menu = {
+    val request = Get(s"$api2Url/organizations/$restaurantId/menu")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Menu](), actualReadTimeout)
+  }
+
+  override def setMenu(accessToken: String, restaurantId: String, menu: Menu): Menu = {
+    val request = Put(s"$api2Url/organizations/$restaurantId/menu", Json.stringify(menu))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Menu](), actualReadTimeout)
+  }
+
   override def submitOrder(accessToken: String, order: Order): Order = {
     val request = Post(s"$api2Url/organizations/${order.restaurantId}/orders", Json.stringify(order))
     Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }

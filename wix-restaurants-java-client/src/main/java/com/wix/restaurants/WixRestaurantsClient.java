@@ -27,6 +27,10 @@ public interface WixRestaurantsClient {
     Secrets getSecrets(String accessToken, String organizationId);
     Secrets setSecrets(String accessToken, String organizationId, Secrets secrets);
 
+    // Menus
+    Menu getMenu(String accessToken, String restaurantId);
+    Menu setMenu(String accessToken, String restaurantId, Menu menu);
+
     // Orders
     Order submitOrder(String accessToken, Order order);
     Order retrieveOrderAsOwner(String accessToken, String restaurantId, String orderId);
