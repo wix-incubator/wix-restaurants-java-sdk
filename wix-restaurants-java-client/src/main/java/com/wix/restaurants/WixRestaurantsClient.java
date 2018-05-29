@@ -21,6 +21,12 @@ public interface WixRestaurantsClient {
     List<SearchResult> search(Filter filter, int limit);
     void changeOrganizationLocale(String accessToken, String organizationId, Locale locale);
 
+    // Organization properties
+    Notifications getNotifications(String accessToken, String organizationId);
+    Notifications setNotifications(String accessToken, String organizationId, Notifications notifications);
+    Secrets getSecrets(String accessToken, String organizationId);
+    Secrets setSecrets(String accessToken, String organizationId, Secrets secrets);
+
     // Orders
     Order submitOrder(String accessToken, Order order);
     Order retrieveOrderAsOwner(String accessToken, String restaurantId, String orderId);

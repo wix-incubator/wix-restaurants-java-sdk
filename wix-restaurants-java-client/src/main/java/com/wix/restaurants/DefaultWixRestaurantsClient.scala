@@ -93,6 +93,30 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     Await.result(client.execute(request) withoutResult(), actualReadTimeout)
   }
 
+  override def getNotifications(accessToken: String , organizationId: String): Notifications = {
+    val request = Get(s"$api2Url/organizations/$organizationId/notifications")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Notifications](), actualReadTimeout)
+  }
+
+  override def setNotifications(accessToken: String, organizationId: String, notifications: Notifications): Notifications = {
+    val request = Put(s"$api2Url/organizations/$organizationId/notifications", Json.stringify(notifications))
+        .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Notifications](), actualReadTimeout)
+  }
+
+  override def getSecrets(accessToken: String , organizationId: String): Secrets = {
+    val request = Get(s"$api2Url/organizations/$organizationId/secrets")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Secrets](), actualReadTimeout)
+  }
+
+  override def setSecrets(accessToken: String, organizationId: String, secrets: Secrets): Secrets = {
+    val request = Put(s"$api2Url/organizations/$organizationId/secrets", Json.stringify(secrets))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Secrets](), actualReadTimeout)
+  }
+
   override def submitOrder(accessToken: String, order: Order): Order = {
     val request = Post(s"$api2Url/organizations/${order.restaurantId}/orders", Json.stringify(order))
     Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }
