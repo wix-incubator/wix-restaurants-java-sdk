@@ -22,7 +22,7 @@ import com.wix.restaurants.exceptions._
 import com.wix.restaurants.i18n.Locale
 import com.wix.restaurants.json.Json
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
-import com.wix.restaurants.requests.{DeleteCustomerRequest, Request, SearchRequest}
+import com.wix.restaurants.requests._
 import com.wix.restaurants.reservations.requests.QueryUnhandledReservationsRequest
 import com.wix.restaurants.reservations.{Reservation, Reservations, ReservationsResponse, Statuses => ReservationStatuses}
 
@@ -247,6 +247,26 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
 
   override def retrieveReservationsByEmail(accessToken: String, organizationId: String, email: String, modifiedSince: Date, limit: Integer): JList[Reservation] = {
     retrieveUserReservations(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email), modifiedSince, limit)
+  }
+
+  override def mapInstance(accessToken: String, instanceId: String, organizationId: String): Unit = {
+    val setWixAppMappingRequest = new SetWixAppMappingRequest
+    setWixAppMappingRequest.accessToken = accessToken
+    setWixAppMappingRequest.instanceId = instanceId
+    setWixAppMappingRequest.organizationId = organizationId
+
+    apiV1Request(setWixAppMappingRequest, new TypeReference[Response[Object]]() {})
+  }
+
+  override def retrieveOrganizationForInstance(instanceId: String): Organization = {
+    val getAppMappedObjectRequest = new GetAppMappedObjectRequest
+    getAppMappedObjectRequest.appId = new AppId
+    getAppMappedObjectRequest.appId.platform = AppId.NS_WIX
+    getAppMappedObjectRequest.appId.id = instanceId
+    getAppMappedObjectRequest.appId.version = "1"
+    getAppMappedObjectRequest.full = false
+
+    apiV1Request(getAppMappedObjectRequest, new TypeReference[Response[Organization]]() {})
   }
 
   private def retrieveUserReservations(accessToken: String, organizationId: String, user: AuthenticationUser, modifiedSince: Date, limit: Integer): JList[Reservation] = {
