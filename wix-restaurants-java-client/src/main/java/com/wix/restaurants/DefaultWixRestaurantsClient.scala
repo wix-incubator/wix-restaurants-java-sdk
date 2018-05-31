@@ -170,13 +170,13 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
-    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/accept", Json.stringify(AnyRef))
+    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(AnyRef))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
   }
 
   override def rejectOrder(accessToken: String, restaurantId: String, orderId: String, comment: String): Order = {
-    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/cancel", Json.stringify(AnyRef))
+    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(AnyRef))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
   }
