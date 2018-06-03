@@ -78,14 +78,6 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     Await.result(client.execute(request) withResult[Organization](), actualReadTimeout)
   }
 
-  override def search(filter: Filter, limit: Int): JList[SearchResult] = {
-    val searchRequest = new SearchRequest
-    searchRequest.filter = filter
-    searchRequest.limit = limit
-    val searchResponse = apiV1Request(searchRequest, new TypeReference[Response[SearchResponse]]() {})
-    searchResponse.results
-  }
-
   override def changeOrganizationLocale(accessToken: String, organizationId: String, locale: Locale): Unit = {
     val request = Post(s"$api2Url/organizations/$organizationId/change_locale?locale=$locale")
       .addHeader(Authorization.oauth2(accessToken))
