@@ -23,8 +23,7 @@ import com.wix.restaurants.i18n.Locale
 import com.wix.restaurants.json.Json
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
 import com.wix.restaurants.requests._
-import com.wix.restaurants.reservations.requests.QueryUnhandledReservationsRequest
-import com.wix.restaurants.reservations.{Reservation, Reservations, ReservationsResponse, Statuses => ReservationStatuses}
+import com.wix.restaurants.reservations.{Reservation, Reservations, Statuses => ReservationStatuses}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
@@ -206,14 +205,9 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   override def retrieveUnhandledReservations(accessToken: String, restaurantId: String): JList[Reservation] = {
-    val queryUnhandledReservationsRequest = new QueryUnhandledReservationsRequest
-    queryUnhandledReservationsRequest.accessToken = accessToken
-    queryUnhandledReservationsRequest.organizationId = restaurantId
-    queryUnhandledReservationsRequest.viewMode = Actors.restaurant
-
-    val queryUnhandledReservationsResponse = apiV1Request(queryUnhandledReservationsRequest, new TypeReference[Response[ReservationsResponse]]() {})
-
-    queryUnhandledReservationsResponse.results
+    val request = Get(s"$api2Url/organizations/$restaurantId/reservations?viewMode=${Actors.restaurant}&unhandled=true")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
   }
 
   override def setReservationStatusAsRestaurant(accessToken: String, restaurantId: String, reservationId: String, status: String, comment: String): Reservation = {
@@ -284,26 +278,18 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   override def deleteCustomerByPhone(accessToken: String, organizationId: String, phone: String): Unit = {
-    val deleteCustomerRequest = new DeleteCustomerRequest
-    deleteCustomerRequest.accessToken = accessToken
-    deleteCustomerRequest.organizationId = organizationId
-    deleteCustomerRequest.customerId = customerByPhone(phone)
-
-    apiV1Request(deleteCustomerRequest, new TypeReference[Response[AnyRef]]() {})
+    deleteCustomer(accessToken, organizationId, new AuthenticationUser(Namespaces.phone, phone))
   }
 
   override def deleteCustomerByEmail(accessToken: String, organizationId: String, email: String): Unit = {
-    val deleteCustomerRequest = new DeleteCustomerRequest
-    deleteCustomerRequest.accessToken = accessToken
-    deleteCustomerRequest.organizationId = organizationId
-    deleteCustomerRequest.customerId = customerByEmail(email)
-
-    apiV1Request(deleteCustomerRequest, new TypeReference[Response[AnyRef]]() {})
+    deleteCustomer(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email))
   }
 
-  private def customerByPhone(phone: String) = new ClientId(ClientNamespaces.phone, phone, null, false)
-
-  private def customerByEmail(email: String) = new ClientId(ClientNamespaces.email, email, null, false)
+  private def deleteCustomer(accessToken: String, organizationId: String, customer: AuthenticationUser): Unit = {
+    val request = Post(s"$api2Url/organizations/$organizationId/delete_customer", Json.stringify(customer))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withoutResult(), actualReadTimeout)
+  }
 
   private def apiV1Request[T](request: Request, responseType: TypeReference[Response[T]]) = {
     Try {
