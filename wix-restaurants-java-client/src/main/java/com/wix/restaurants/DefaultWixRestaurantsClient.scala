@@ -360,7 +360,7 @@ object DefaultWixRestaurantsClient {
 private object ExceptionTranslator {
   def asException(errorResponse: ErrorResponse): RuntimeException = {
     errorResponse match {
-      case errRes if errRes.`type` == "https://www.wixrestaurants.com/errors/not_found" => new NotFoundException(errorResponse.detail.orNull)
+      case errRes if errRes.`type` == Errors.NotFound => new NotFoundException(errorResponse.detail.orNull)
       case _ => new RuntimeException(s"Received an error response from the server with type: '${errorResponse.`type`}'${errorResponse.detail.map(detail => s", Detail: '$detail'").getOrElse("")}")
     }
   }

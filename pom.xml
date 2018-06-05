@@ -73,6 +73,7 @@
 
 
 	<modules>
+		<module>wix-restaurants-api</module>
 		<module>wix-restaurants-java-client</module>
 		<module>wix-restaurants-java-examples</module>
 	</modules>
