@@ -359,9 +359,14 @@ object DefaultWixRestaurantsClient {
 
 private object ExceptionTranslator {
   def asException(errorResponse: ErrorResponse): RuntimeException = {
-    errorResponse match {
-      case errRes if errRes.`type` == Errors.NotFound => new NotFoundException(errorResponse.detail.orNull)
-      case _ => new RuntimeException(s"Received an error response from the server with type: '${errorResponse.`type`}'${errorResponse.detail.map(detail => s", Detail: '$detail'").getOrElse("")}")
+    errorResponse.`type` match {
+      case Errors.InvalidData => new InvalidDataException(errorResponse.detail.orNull)
+      case Errors.Forbidden => new NoPermissionException(errorResponse.detail.orNull)
+      case Errors.Conflict => new ConflictException(errorResponse.detail.orNull)
+      case Errors.NotFound => new NotFoundException(errorResponse.detail.orNull)
+      case Errors.Internal => new InternalException(errorResponse.detail.orNull)
+      case Errors.TemporarilyUnavailable => new TemporarilyUnavailableException(errorResponse.detail.orNull)
+      case _ => new RestaurantsException(s"Type: '${errorResponse.`type`}'${errorResponse.detail.map(detail => s", Detail: '$detail'").getOrElse("")}")
     }
   }
 }
