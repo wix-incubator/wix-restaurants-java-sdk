@@ -44,12 +44,8 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     readTimeout.map { _.toMillis.toInt }.map { JInteger.valueOf }.orNull,
     numberOfRetries,
     api1Url)
-  private val authClient: WixRestaurantsAuthenticationClient = new DefaultWixRestaurantsAuthenticationClient(
-    requestFactory,
-    connectTimeout.map { _.toMillis.toInt }.map { JInteger.valueOf }.orNull,
-    readTimeout.map { _.toMillis.toInt }.map { JInteger.valueOf }.orNull,
-    numberOfRetries,
-    authApiUrl)
+  private val authenticationClient: WixRestaurantsAuthenticationClient = new DefaultWixRestaurantsAuthenticationClient(
+    authApiUrl, readTimeout)
   private val authorizationClient: AuthorizationClient = new DefaultAuthorizationClient(
     apiUrl = api2Url)
 
@@ -58,7 +54,7 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   private val client: AkkaRestClient = new AkkaRestClient(errorResponseAsException = ExceptionTranslator.asException)
 
 
-  override def getAuthenticationClient: WixRestaurantsAuthenticationClient = authClient
+  override def getAuthenticationClient: WixRestaurantsAuthenticationClient = authenticationClient
 
   override def getAuthorizationClient: AuthorizationClient = authorizationClient
 
@@ -310,7 +306,7 @@ object DefaultWixRestaurantsClient {
     private var connectTimeout = 0
     private var readTimeout = 0
     private var numberOfRetries = 0
-    private var authApiUrl = com.wix.restaurants.authentication.Endpoints.PRODUCTION
+    private var authApiUrl = "https://auth.wixrestaurants.com/v2"
     private var apiUrl = Endpoints.production
     private var api2Url = "https://api.wixrestaurants.com/v2"
 
