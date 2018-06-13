@@ -31,7 +31,7 @@ import scala.util.{Failure, Success, Try}
 
 class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.com/v2",
                                   api1Url: String = "https://api.wixrestaurants.com/v1.1",
-                                  authApiUrl: String = "https://auth.wixrestaurants.com/v1",
+                                  authApiUrl: String = "https://auth.wixrestaurants.com/v2",
                                   connectTimeout: Option[Duration] = None,
                                   readTimeout: Option[Duration] = None,
                                   numberOfRetries: Integer = 0) extends WixRestaurantsClient {
