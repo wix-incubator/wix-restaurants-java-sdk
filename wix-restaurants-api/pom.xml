@@ -31,6 +31,11 @@
 
     <dependencies>
 		<!-- Compile/runtime dependencies -->
+        <dependency>
+            <groupId>com.wix.openrest</groupId>
+            <artifactId>openrest4j-api</artifactId>
+            <version>${openrest4j.version}</version>
+        </dependency>
 
         <!-- Test Dependencies -->
     </dependencies>

@@ -10,6 +10,7 @@ import com.wix.restaurants.i18n.Locale;
 import com.wix.restaurants.reservations.Reservation;
 import com.wix.restaurants.reservations.Statuses;
 import com.wix.restaurants.reservations.builders.ReservationBuilder;
+import scala.concurrent.duration.Duration;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -89,7 +90,10 @@ public class SubmitReservationExample {
     }
 
     public static void main(String[] args) throws Exception {
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
+                "https://api.wixrestaurants.com/v2",
+                "https://auth.wixrestaurants.com/v1",
+                Duration.Inf());
 
         new SubmitReservationExample(wixRestaurants).runExample();
     }

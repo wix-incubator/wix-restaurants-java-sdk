@@ -37,6 +37,7 @@
     </parent>
 
     <dependencies>
+        <!-- Compile/runtime dependencies -->
         <dependency>
             <groupId>com.wix.restaurants</groupId>
             <artifactId>wix-restaurants-api</artifactId>
@@ -51,13 +52,6 @@
             <groupId>com.wix.rest</groupId>
             <artifactId>rest-rfc7807-client</artifactId>
             <version>${com.wix.rest.rest-rfc7807.version}</version>
-        </dependency>
-
-		<!-- Compile/runtime dependencies -->
-        <dependency>
-            <groupId>com.wix.openrest</groupId>
-            <artifactId>openrest4j-client</artifactId>
-            <version>${openrest4j.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->

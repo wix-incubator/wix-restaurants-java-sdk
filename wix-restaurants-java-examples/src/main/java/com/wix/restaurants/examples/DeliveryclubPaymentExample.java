@@ -15,6 +15,7 @@ import com.wix.restaurants.orders.builders.OrderBuilder;
 import com.wix.restaurants.orders.builders.OrderItemBuilder;
 import com.wix.restaurants.orders.builders.PickupBuilder;
 import com.wix.restaurants.payments.DeliveryclubPayment;
+import scala.concurrent.duration.Duration;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -123,7 +124,10 @@ public class DeliveryclubPaymentExample {
     }
 
     public static void main(String[] args) {
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
+                "https://api.wixrestaurants.com/v2",
+                "https://auth.wixrestaurants.com/v1",
+                Duration.Inf());
 
         new DeliveryclubPaymentExample(wixRestaurants).runExample();
     }

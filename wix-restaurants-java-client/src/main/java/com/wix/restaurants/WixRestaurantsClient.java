@@ -116,8 +116,4 @@ public interface WixRestaurantsClient {
     void deleteOrganization(String accessToken, String organizationId);
     void deleteCustomerByPhone(String accessToken, String organizationId, String phone);
     void deleteCustomerByEmail(String accessToken, String organizationId, String email);
-
-    // Deprecated Wix instance mapping
-    void mapInstance(String accessToken, String instanceId, String organizationId);
-    Organization retrieveOrganizationForInstance(String instanceId);
 }

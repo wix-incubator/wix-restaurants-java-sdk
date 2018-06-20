@@ -5,6 +5,7 @@ import com.wix.restaurants.DefaultWixRestaurantsClient;
 import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.exceptions.NoPermissionException;
+import scala.concurrent.duration.Duration;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +61,10 @@ public class RetrieveNewOrdersExample {
     }
 
     public static void main(String[] args) throws Exception {
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
+                "https://api.wixrestaurants.com/v2",
+                "https://auth.wixrestaurants.com/v1",
+                Duration.Inf());
 
         new RetrieveNewOrdersExample(wixRestaurants).runExample();
     }

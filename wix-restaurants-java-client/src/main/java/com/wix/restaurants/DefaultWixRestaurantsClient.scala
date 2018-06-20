@@ -1,17 +1,11 @@
 package com.wix.restaurants
 
-import java.io.IOException
-import java.lang.{Integer => JInteger}
 import java.net.URLEncoder
-import java.util.concurrent.TimeUnit
 import java.util.{Date, List => JList, Map => JMap}
 
 import akka.actor.ActorSystem
 import akka.http.javadsl.model.headers.Authorization
 import akka.http.scaladsl.client.RequestBuilding.{Delete, Get, Post, Put}
-import com.fasterxml.jackson.core.`type`.TypeReference
-import com.google.api.client.http.HttpRequestFactory
-import com.google.api.client.http.javanet.NetHttpTransport
 import com.openrest.v1_1._
 import com.wix.rest.rfc7807.api.model.ErrorResponse
 import com.wix.rest.rfc7807.client.AkkaRestClient
@@ -22,32 +16,19 @@ import com.wix.restaurants.exceptions._
 import com.wix.restaurants.i18n.Locale
 import com.wix.restaurants.json.Json
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
-import com.wix.restaurants.requests._
 import com.wix.restaurants.reservations.{Reservation, Reservations, Statuses => ReservationStatuses}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
-import scala.util.{Failure, Success, Try}
 
-class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.com/v2",
-                                  api1Url: String = "https://api.wixrestaurants.com/v1.1",
+class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.com/v2",
                                   authApiUrl: String = "https://auth.wixrestaurants.com/v2",
-                                  connectTimeout: Option[Duration] = None,
-                                  readTimeout: Option[Duration] = None,
-                                  numberOfRetries: Integer = 0) extends WixRestaurantsClient {
-  private val actualReadTimeout = readTimeout.getOrElse(Duration.Inf)
+                                  readTimeout: Duration = Duration.Inf) extends WixRestaurantsClient {
 
-  private val requestFactory: HttpRequestFactory = new NetHttpTransport().createRequestFactory
-  private val apiV1Client = new OpenrestClient(
-    requestFactory,
-    connectTimeout.map { _.toMillis.toInt }.map { JInteger.valueOf }.orNull,
-    readTimeout.map { _.toMillis.toInt }.map { JInteger.valueOf }.orNull,
-    numberOfRetries,
-    api1Url)
   private val authenticationClient: WixRestaurantsAuthenticationClient = new DefaultWixRestaurantsAuthenticationClient(
-    authApiUrl, readTimeout)
+    authApiUrl, Some(readTimeout))
   private val authorizationClient: AuthorizationClient = new DefaultAuthorizationClient(
-    apiUrl = api2Url)
+    apiUrl = apiUrl)
 
   private implicit val system: ActorSystem = ActorSystem("akka-wix-restaurants-client-system")
   private implicit val executionContext: ExecutionContext = system.dispatcher
@@ -59,85 +40,85 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   override def getAuthorizationClient: AuthorizationClient = authorizationClient
 
   override def retrieveRestaurantInfo(restaurantId: String): RestaurantFullInfo = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/full")
-    Await.result(client.execute(request) withResult[RestaurantFullInfo](), actualReadTimeout)
+    val request = Get(s"$apiUrl/organizations/$restaurantId/full")
+    Await.result(client.execute(request) withResult[RestaurantFullInfo](), readTimeout)
   }
 
   override def retrieveOrganization(organizationId: String): Organization = {
-    val request = Get(s"$api2Url/organizations/$organizationId")
-    Await.result(client.execute(request) withResult[Organization](), actualReadTimeout)
+    val request = Get(s"$apiUrl/organizations/$organizationId")
+    Await.result(client.execute(request) withResult[Organization](), readTimeout)
   }
 
   override def setOrganization(accessToken: String, organization: Organization): Organization = {
-    val request = Put(s"$api2Url/organizations/${organization.id}", Json.stringify(organization))
+    val request = Put(s"$apiUrl/organizations/${organization.id}", Json.stringify(organization))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Organization](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Organization](), readTimeout)
   }
 
   override def changeOrganizationLocale(accessToken: String, organizationId: String, locale: Locale): Unit = {
-    val request = Post(s"$api2Url/organizations/$organizationId/change_locale?locale=$locale")
+    val request = Post(s"$apiUrl/organizations/$organizationId/change_locale?locale=$locale")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withoutResult(), actualReadTimeout)
+    Await.result(client.execute(request) withoutResult(), readTimeout)
   }
 
   override def getNotifications(accessToken: String , organizationId: String): Notifications = {
-    val request = Get(s"$api2Url/organizations/$organizationId/notifications")
+    val request = Get(s"$apiUrl/organizations/$organizationId/notifications")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Notifications](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Notifications](), readTimeout)
   }
 
   override def setNotifications(accessToken: String, organizationId: String, notifications: Notifications): Notifications = {
-    val request = Put(s"$api2Url/organizations/$organizationId/notifications", Json.stringify(notifications))
+    val request = Put(s"$apiUrl/organizations/$organizationId/notifications", Json.stringify(notifications))
         .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Notifications](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Notifications](), readTimeout)
   }
 
   override def getSecrets(accessToken: String , organizationId: String): Secrets = {
-    val request = Get(s"$api2Url/organizations/$organizationId/secrets")
+    val request = Get(s"$apiUrl/organizations/$organizationId/secrets")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Secrets](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Secrets](), readTimeout)
   }
 
   override def setSecrets(accessToken: String, organizationId: String, secrets: Secrets): Secrets = {
-    val request = Put(s"$api2Url/organizations/$organizationId/secrets", Json.stringify(secrets))
+    val request = Put(s"$apiUrl/organizations/$organizationId/secrets", Json.stringify(secrets))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Secrets](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Secrets](), readTimeout)
   }
 
   override def getMenu(accessToken: String , restaurantId: String): Menu = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/menu")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/menu")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Menu](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
   override def setMenu(accessToken: String, restaurantId: String, menu: Menu): Menu = {
-    val request = Put(s"$api2Url/organizations/$restaurantId/menu", Json.stringify(menu))
+    val request = Put(s"$apiUrl/organizations/$restaurantId/menu", Json.stringify(menu))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Menu](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
   override def submitOrder(accessToken: String, order: Order): Order = {
-    val request = Post(s"$api2Url/organizations/${order.restaurantId}/orders", Json.stringify(order))
+    val request = Post(s"$apiUrl/organizations/${order.restaurantId}/orders", Json.stringify(order))
     Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def retrieveOrderAsRestaurant(accessToken: String, restaurantId: String, orderId: String): Order = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/orders/$orderId?viewMode=${Actors.restaurant}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders/$orderId?viewMode=${Actors.restaurant}")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def retrieveOrderAsOwner(accessToken: String, restaurantId: String, orderId: String): Order = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/orders/$orderId?viewMode=${Actors.customer}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders/$orderId?viewMode=${Actors.customer}")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def retrieveNewOrders(accessToken: String, restaurantId: String): JList[Order] = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&status=${OrderStatuses.new_}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&status=${OrderStatuses.new_}")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Orders](client.execute(request) withResult[Orders](), actualReadTimeout).results
+    Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
   override def retrieveOrdersByPhone(accessToken: String, organizationId: String, phone: String, modifiedSince: Date, limit: Integer): JList[Order] = {
@@ -151,75 +132,75 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   private def retrieveUserOrders(accessToken: String, organizationId: String, user: AuthenticationUser, modifiedSince: Date, limit: Integer): JList[Order] = {
     val modifiedSinceTimestamp = Option(modifiedSince).map { _.getTime }.getOrElse(0L)
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
-    val request = Get(s"$api2Url/organizations/$organizationId/orders?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
+    val request = Get(s"$apiUrl/organizations/$organizationId/orders?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Orders](client.execute(request) withResult[Orders](), actualReadTimeout).results
+    Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
-    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(None)))
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(None)))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def rejectOrder(accessToken: String, restaurantId: String, orderId: String, comment: String): Order = {
-    val request = Post(s"$api2Url/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(Option(comment))))
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(Option(comment))))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def setOrderProperties(accessToken: String, restaurantId: String, orderId: String, properties: JMap[String, String]): Order = {
-    val request = Put(s"$api2Url/organizations/$restaurantId/orders/$orderId/properties", Json.stringify(properties))
+    val request = Put(s"$apiUrl/organizations/$restaurantId/orders/$orderId/properties", Json.stringify(properties))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Order](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def submitReservation(accessToken: String, reservation: Reservation): Reservation = {
-    val request = Post(s"$api2Url/organizations/${reservation.restaurantId}/reservations", Json.stringify(reservation))
+    val request = Post(s"$apiUrl/organizations/${reservation.restaurantId}/reservations", Json.stringify(reservation))
     Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }
-    Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Reservation](), readTimeout)
   }
 
   override def retrieveReservationAsOwner(accessToken: String, restaurantId: String, reservationId: String): Reservation = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/reservations/$reservationId?viewMode=${Actors.customer}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId?viewMode=${Actors.customer}")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Reservation](), readTimeout)
   }
 
   override def retrieveReservationAsRestaurant(accessToken: String, restaurantId: String, reservationId: String): Reservation = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/reservations/$reservationId?viewMode=${Actors.restaurant}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId?viewMode=${Actors.restaurant}")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+    Await.result(client.execute(request) withResult[Reservation](), readTimeout)
   }
 
   override def retrieveUnhandledReservations(accessToken: String, restaurantId: String): JList[Reservation] = {
-    val request = Get(s"$api2Url/organizations/$restaurantId/reservations?viewMode=${Actors.restaurant}&unhandled=true")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/reservations?viewMode=${Actors.restaurant}&unhandled=true")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
+    Await.result[Reservations](client.execute(request) withResult[Reservations](), readTimeout).results
   }
 
   override def setReservationStatusAsRestaurant(accessToken: String, restaurantId: String, reservationId: String, status: String, comment: String): Reservation = {
     status match {
       case ReservationStatuses.accepted =>
-        val request = Post(s"$api2Url/organizations/$restaurantId/reservations/$reservationId/accept?as=${Actors.restaurant}")
+        val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/accept?as=${Actors.restaurant}")
           .addHeader(Authorization.oauth2(accessToken))
-        Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+        Await.result(client.execute(request) withResult[Reservation](), readTimeout)
 
       case ReservationStatuses.canceled =>
-        val request = Post(s"$api2Url/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.restaurant}",
+        val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.restaurant}",
           Json.stringify(UpdateStatusRequest(comment = Option(comment))))
           .addHeader(Authorization.oauth2(accessToken))
-        Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+        Await.result(client.execute(request) withResult[Reservation](), readTimeout)
     }
   }
 
   override def setReservationStatusAsOwner(accessToken: String, restaurantId: String, reservationId: String, status: String, comment: String): Reservation = {
     status match {
       case ReservationStatuses.canceled =>
-        val request = Post(s"$api2Url/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.customer}",
+        val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.customer}",
           Json.stringify(UpdateStatusRequest(comment = Option(comment))))
           .addHeader(Authorization.oauth2(accessToken))
-        Await.result(client.execute(request) withResult[Reservation](), actualReadTimeout)
+        Await.result(client.execute(request) withResult[Reservation](), readTimeout)
     }
   }
 
@@ -231,38 +212,18 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
     retrieveUserReservations(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email), modifiedSince, limit)
   }
 
-  override def mapInstance(accessToken: String, instanceId: String, organizationId: String): Unit = {
-    val setWixAppMappingRequest = new SetWixAppMappingRequest
-    setWixAppMappingRequest.accessToken = accessToken
-    setWixAppMappingRequest.instanceId = instanceId
-    setWixAppMappingRequest.organizationId = organizationId
-
-    apiV1Request(setWixAppMappingRequest, new TypeReference[Response[Object]]() {})
-  }
-
-  override def retrieveOrganizationForInstance(instanceId: String): Organization = {
-    val getAppMappedObjectRequest = new GetAppMappedObjectRequest
-    getAppMappedObjectRequest.appId = new AppId
-    getAppMappedObjectRequest.appId.platform = AppId.NS_WIX
-    getAppMappedObjectRequest.appId.id = instanceId
-    getAppMappedObjectRequest.appId.version = "1"
-    getAppMappedObjectRequest.full = false
-
-    apiV1Request(getAppMappedObjectRequest, new TypeReference[Response[Organization]]() {})
-  }
-
   private def retrieveUserReservations(accessToken: String, organizationId: String, user: AuthenticationUser, modifiedSince: Date, limit: Integer): JList[Reservation] = {
     val modifiedSinceTimestamp = Option(modifiedSince).map { _.getTime }.getOrElse(0L)
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
-    val request = Get(s"$api2Url/organizations/$organizationId/reservations?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
+    val request = Get(s"$apiUrl/organizations/$organizationId/reservations?viewMode=${Actors.restaurant}&user=${user.ns}:${URLEncoder.encode(user.id, "UTF-8")}&modified=gte:$modifiedSinceTimestamp&limit=$actualLimit")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result[Reservations](client.execute(request) withResult[Reservations](), actualReadTimeout).results
+    Await.result[Reservations](client.execute(request) withResult[Reservations](), readTimeout).results
   }
 
   override def deleteOrganization(accessToken: String, organizationId: String): Unit = {
-    val request = Delete(s"$api2Url/organizations/$organizationId")
+    val request = Delete(s"$apiUrl/organizations/$organizationId")
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withoutResult(), actualReadTimeout)
+    Await.result(client.execute(request) withoutResult(), readTimeout)
   }
 
   override def deleteCustomerByPhone(accessToken: String, organizationId: String, phone: String): Unit = {
@@ -274,20 +235,9 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 
   private def deleteCustomer(accessToken: String, organizationId: String, customer: AuthenticationUser): Unit = {
-    val request = Post(s"$api2Url/organizations/$organizationId/delete_customer", Json.stringify(customer))
+    val request = Post(s"$apiUrl/organizations/$organizationId/delete_customer", Json.stringify(customer))
       .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withoutResult(), actualReadTimeout)
-  }
-
-  private def apiV1Request[T](request: Request, responseType: TypeReference[Response[T]]) = {
-    Try {
-      apiV1Client.request(request, responseType)
-    } match {
-      case Success(value) => value
-      case Failure(e: IOException) => throw new CommunicationException(e.getMessage, e)
-      case Failure(e: OpenrestException) => throw translateException(e)
-      case Failure(e) => throw e
-    }
+    Await.result(client.execute(request) withoutResult(), readTimeout)
   }
 
   private def translateException(e: OpenrestException): RestaurantsException = {
@@ -301,57 +251,6 @@ class DefaultWixRestaurantsClient(api2Url: String = "https://api.wixrestaurants.
   }
 }
 
-object DefaultWixRestaurantsClient {
-  class Builder {
-    private var connectTimeout = 0
-    private var readTimeout = 0
-    private var numberOfRetries = 0
-    private var authApiUrl = "https://auth.wixrestaurants.com/v2"
-    private var apiUrl = Endpoints.production
-    private var api2Url = "https://api.wixrestaurants.com/v2"
-
-    def setConnectTimeout(connectTimeout: Int): Builder = {
-      this.connectTimeout = connectTimeout
-      this
-    }
-
-    def setReadTimeout(readTimeout: Int): Builder = {
-      this.readTimeout = readTimeout
-      this
-    }
-
-    def setNumberOfRetries(numberOfRetries: Int): Builder = {
-      this.numberOfRetries = numberOfRetries
-      this
-    }
-
-    def setAuthApiUrl(authApiUrl: String): Builder = {
-      this.authApiUrl = authApiUrl
-      this
-    }
-
-    def setApiUrl(apiUrl: String): Builder = {
-      this.apiUrl = apiUrl
-      this
-    }
-
-    def setApi2Url(api2Url: String): Builder = {
-      this.api2Url = api2Url
-      this
-    }
-
-    def build: DefaultWixRestaurantsClient = {
-      new DefaultWixRestaurantsClient(
-        api2Url = api2Url,
-        api1Url = apiUrl,
-        authApiUrl = authApiUrl,
-        connectTimeout = Some(Duration(connectTimeout, TimeUnit.MILLISECONDS)),
-        readTimeout = Some(Duration(readTimeout, TimeUnit.MILLISECONDS)),
-        numberOfRetries = numberOfRetries)
-    }
-  }
-
-}
 
 private object ExceptionTranslator {
   def asException(errorResponse: ErrorResponse): RuntimeException = {

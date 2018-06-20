@@ -14,6 +14,7 @@ import com.wix.restaurants.orders.builders.OrderBuilder;
 import com.wix.restaurants.orders.builders.OrderItemBuilder;
 import com.wix.restaurants.orders.builders.PickupBuilder;
 import com.wix.restaurants.payments.builders.CashPaymentBuilder;
+import scala.concurrent.duration.Duration;
 
 import java.util.Currency;
 
@@ -99,7 +100,10 @@ public class SubmitOrderExample {
     }
 
     public static void main(String[] args) throws Exception {
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
+                "https://api.wixrestaurants.com/v2",
+                "https://auth.wixrestaurants.com/v1",
+                Duration.Inf());
 
         new SubmitOrderExample(wixRestaurants).runExample();
     }

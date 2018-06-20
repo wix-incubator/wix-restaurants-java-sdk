@@ -6,6 +6,7 @@ import com.wix.restaurants.WixRestaurantsClient;
 import com.wix.restaurants.examples.helpers.MenuHelper;
 import com.wix.restaurants.helpers.Localizer;
 import com.wix.restaurants.i18n.Locale;
+import scala.concurrent.duration.Duration;
 
 import java.math.BigDecimal;
 
@@ -105,7 +106,10 @@ public class MenuExample {
     }
 
     public static void main(String[] args) {
-        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient.Builder().build();
+        final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
+                "https://api.wixrestaurants.com/v2",
+                "https://auth.wixrestaurants.com/v1",
+                Duration.Inf());
 
         new MenuExample(wixRestaurants).runExample();
     }
