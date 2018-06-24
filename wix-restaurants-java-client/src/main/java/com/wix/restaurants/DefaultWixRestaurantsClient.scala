@@ -138,13 +138,13 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
-    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(None)))
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(Comment(None)))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
   override def rejectOrder(accessToken: String, restaurantId: String, orderId: String, comment: String): Order = {
-    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(UpdateStatusRequest(Option(comment))))
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(Comment(Option(comment))))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
@@ -188,7 +188,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
 
       case ReservationStatuses.canceled =>
         val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.restaurant}",
-          Json.stringify(UpdateStatusRequest(comment = Option(comment))))
+          Json.stringify(Comment(comment = Option(comment))))
           .addHeader(Authorization.oauth2(accessToken))
         Await.result(client.execute(request) withResult[Reservation](), readTimeout)
     }
@@ -198,7 +198,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     status match {
       case ReservationStatuses.canceled =>
         val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/cancel?as=${Actors.customer}",
-          Json.stringify(UpdateStatusRequest(comment = Option(comment))))
+          Json.stringify(Comment(comment = Option(comment))))
           .addHeader(Authorization.oauth2(accessToken))
         Await.result(client.execute(request) withResult[Reservation](), readTimeout)
     }
@@ -239,16 +239,6 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withoutResult(), readTimeout)
   }
-
-  private def translateException(e: OpenrestException): RestaurantsException = {
-    e.error match {
-      case Error.ERROR_NO_PERMISSION => new NoPermissionException(e.errorMessage, e)
-      case Error.ERROR_INVALID_DATA => new InvalidDataException(e.errorMessage, e)
-      case Error.ERROR_INTERNAL => new InternalException(e.errorMessage, e)
-      case Error.ERROR_NOT_FOUND => new NotFoundException(e.errorMessage, e)
-      case _ => new RestaurantsException(e.error + "|" + e.errorMessage, e)
-    }
-  }
 }
 
 
@@ -265,5 +255,3 @@ private object ExceptionTranslator {
     }
   }
 }
-
-private case class UpdateStatusRequest(comment: Option[String])
