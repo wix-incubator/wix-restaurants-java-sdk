@@ -116,7 +116,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def retrieveNewOrders(accessToken: String, restaurantId: String): JList[Order] = {
-    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&status=${OrderStatuses.new_}")
+    retrieveOrdersAsRestaurant(accessToken, restaurantId, OrderStatuses.new_, 10000)
+  }
+
+  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, status: String, limit: Int): JList[Order] = {
+    val statusPart = Option(status).map { theStatus => s"&status=$theStatus" }.getOrElse("")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$statusPart&limit=$limit")
       .addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
