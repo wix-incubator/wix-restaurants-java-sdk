@@ -187,7 +187,8 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   override def setReservationStatusAsRestaurant(accessToken: String, restaurantId: String, reservationId: String, status: String, comment: String): Reservation = {
     status match {
       case ReservationStatuses.accepted =>
-        val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/accept?as=${Actors.restaurant}")
+        val request = Post(s"$apiUrl/organizations/$restaurantId/reservations/$reservationId/accept?as=${Actors.restaurant}",
+          Json.stringify(Comment(comment = Option(comment))))
           .addHeader(Authorization.oauth2(accessToken))
         Await.result(client.execute(request) withResult[Reservation](), readTimeout)
 
