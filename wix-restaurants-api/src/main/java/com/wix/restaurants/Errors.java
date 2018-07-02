@@ -6,6 +6,7 @@ public class Errors {
     // Client
     public static final String InvalidData            = "https://www.wixrestaurants.com/errors/invalid_data";
     public static final String PaymentRejected        = "https://www.wixrestaurants.com/errors/cc_rejected";
+    public static final String PaymentExceedsLimit    = "https://www.wixrestaurants.com/errors/payment_exceeds_limit";
     public static final String Forbidden              = "https://www.wixrestaurants.com/errors/no_permission";
     public static final String Conflict               = "https://www.wixrestaurants.com/errors/conflict";
     public static final String Authentication         = "https://www.wixrestaurants.com/errors/authentication";
