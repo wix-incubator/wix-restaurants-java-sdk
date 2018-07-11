@@ -117,4 +117,9 @@ public interface WixRestaurantsClient {
     void deleteOrganization(String accessToken, String organizationId);
     void deleteCustomerByPhone(String accessToken, String organizationId, String phone);
     void deleteCustomerByEmail(String accessToken, String organizationId, String email);
+
+    // Facebook mapping (temporary, will be deprecated soon)
+    String getFacebookMapping(String pageId);
+    void setFacebookMapping(String accessToken, String pageId, String organizationId);
+    void deleteFacebookMapping(String accessToken, String pageId);
 }

@@ -243,6 +243,25 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     deleteCustomer(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email))
   }
 
+  private case class OrganizationId(organizationId: String)
+
+  override def getFacebookMapping(pageId: String): String = {
+    val request = Get(s"$apiUrl/facebook/$pageId")
+    Await.result[OrganizationId](client.execute(request) withResult[OrganizationId](), readTimeout).organizationId
+  }
+
+  override def setFacebookMapping(accessToken: String, pageId: String, organizationId: String): Unit = {
+    val request = Put(s"$apiUrl/facebook/$pageId", Json.stringify(OrganizationId(organizationId)))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withoutResult(), readTimeout)
+  }
+
+  override def deleteFacebookMapping(accessToken: String, pageId: String): Unit = {
+    val request = Delete(s"$apiUrl/facebook/$pageId")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withoutResult(), readTimeout)
+  }
+
   private def deleteCustomer(accessToken: String, organizationId: String, customer: AuthenticationUser): Unit = {
     val request = Post(s"$apiUrl/organizations/$organizationId/delete_customer", Json.stringify(customer))
       .addHeader(Authorization.oauth2(accessToken))
