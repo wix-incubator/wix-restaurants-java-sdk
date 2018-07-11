@@ -98,8 +98,11 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def submitOrder(accessToken: String, order: Order): Order = {
-    val request = Post(s"$apiUrl/organizations/${order.restaurantId}/orders", Json.stringify(order))
-    Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }
+    val anonymousRequest = Post(s"$apiUrl/organizations/${order.restaurantId}/orders", Json.stringify(order))
+    val request = Option(accessToken) match {
+      case Some(at) => anonymousRequest.addHeader(Authorization.oauth2(at))
+      case None => anonymousRequest
+    }
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
