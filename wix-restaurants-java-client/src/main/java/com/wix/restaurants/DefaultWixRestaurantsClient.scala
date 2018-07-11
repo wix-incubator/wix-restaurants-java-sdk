@@ -21,6 +21,10 @@ import com.wix.restaurants.reservations.{Reservation, Reservations, Statuses => 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 
+
+// Remove after Facebook mapping migration
+case class TempOrganizationId(organizationId: String)
+
 class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.com/v2",
                                   authApiUrl: String = "https://auth.wixrestaurants.com/v2",
                                   readTimeout: Duration = Duration.Inf) extends WixRestaurantsClient {
@@ -243,15 +247,13 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     deleteCustomer(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email))
   }
 
-  private case class OrganizationId(organizationId: String)
-
   override def getFacebookMapping(pageId: String): String = {
     val request = Get(s"$apiUrl/facebook/$pageId")
-    Await.result[OrganizationId](client.execute(request) withResult[OrganizationId](), readTimeout).organizationId
+    Await.result[TempOrganizationId](client.execute(request) withResult[TempOrganizationId](), readTimeout).organizationId
   }
 
   override def setFacebookMapping(accessToken: String, pageId: String, organizationId: String): Unit = {
-    val request = Put(s"$apiUrl/facebook/$pageId", Json.stringify(OrganizationId(organizationId)))
+    val request = Put(s"$apiUrl/facebook/$pageId", Json.stringify(TempOrganizationId(organizationId)))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withoutResult(), readTimeout)
   }
