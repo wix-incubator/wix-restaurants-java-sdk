@@ -247,6 +247,18 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     deleteCustomer(accessToken, organizationId, new AuthenticationUser(Namespaces.email, email))
   }
 
+  override def getMyAccount(accessToken: String): ClientInfo = {
+    val request = Get(s"$apiUrl/me/account")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[ClientInfo](), readTimeout)
+  }
+
+  override def setMyAccount(accessToken: String, account: ClientInfo): ClientInfo = {
+    val request = Put(s"$apiUrl/me/account", Json.stringify(account))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[ClientInfo](), readTimeout)
+  }
+
   override def getFacebookMapping(pageId: String): String = {
     val request = Get(s"$apiUrl/facebook/$pageId")
     Await.result[TempOrganizationId](client.execute(request) withResult[TempOrganizationId](), readTimeout).organizationId

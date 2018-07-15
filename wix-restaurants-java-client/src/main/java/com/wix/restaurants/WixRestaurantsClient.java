@@ -118,6 +118,10 @@ public interface WixRestaurantsClient {
     void deleteCustomerByPhone(String accessToken, String organizationId, String phone);
     void deleteCustomerByEmail(String accessToken, String organizationId, String email);
 
+    // User accounts (express checkout)
+    ClientInfo getMyAccount(String accessToken);
+    ClientInfo setMyAccount(String accessToken, ClientInfo account);
+
     // Facebook mapping (temporary, will be deprecated soon)
     String getFacebookMapping(String pageId);
     void setFacebookMapping(String accessToken, String pageId, String organizationId);
