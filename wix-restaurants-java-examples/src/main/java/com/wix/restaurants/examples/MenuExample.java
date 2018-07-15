@@ -108,7 +108,7 @@ public class MenuExample {
     public static void main(String[] args) {
         final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
                 "https://api.wixrestaurants.com/v2",
-                "https://auth.wixrestaurants.com/v1",
+                "https://auth.wixrestaurants.com/v2",
                 Duration.Inf());
 
         new MenuExample(wixRestaurants).runExample();

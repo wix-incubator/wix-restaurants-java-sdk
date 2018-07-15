@@ -102,7 +102,7 @@ public class SubmitOrderExample {
     public static void main(String[] args) throws Exception {
         final WixRestaurantsClient wixRestaurants = new DefaultWixRestaurantsClient(
                 "https://api.wixrestaurants.com/v2",
-                "https://auth.wixrestaurants.com/v1",
+                "https://auth.wixrestaurants.com/v2",
                 Duration.Inf());
 
         new SubmitOrderExample(wixRestaurants).runExample();
