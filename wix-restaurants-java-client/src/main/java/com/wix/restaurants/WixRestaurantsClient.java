@@ -1,6 +1,7 @@
 package com.wix.restaurants;
 
 import com.openrest.v1_1.*;
+import com.wix.pay.smaug.client.model.CreditCardToken;
 import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authorization.AuthorizationClient;
 import com.wix.restaurants.i18n.Locale;
@@ -121,6 +122,7 @@ public interface WixRestaurantsClient {
     // User accounts (express checkout)
     ClientInfo getMyAccount(String accessToken);
     ClientInfo setMyAccount(String accessToken, ClientInfo account);
+    ClientInfo addMyAccountCards(String accessToken, List<CreditCardToken> cardTokens);
 
     // Facebook mapping (temporary, will be deprecated soon)
     String getFacebookMapping(String pageId);

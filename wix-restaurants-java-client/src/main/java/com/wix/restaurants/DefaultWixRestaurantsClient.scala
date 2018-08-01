@@ -7,6 +7,7 @@ import akka.actor.ActorSystem
 import akka.http.javadsl.model.headers.Authorization
 import akka.http.scaladsl.client.RequestBuilding.{Delete, Get, Post, Put}
 import com.openrest.v1_1._
+import com.wix.pay.smaug.client.model.CreditCardToken
 import com.wix.rest.rfc7807.api.model.ErrorResponse
 import com.wix.rest.rfc7807.client.AkkaRestClient
 import com.wix.restaurants.authentication.model.{Namespaces, User => AuthenticationUser}
@@ -18,9 +19,9 @@ import com.wix.restaurants.json.Json
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
 import com.wix.restaurants.reservations.{Reservation, Reservations, Statuses => ReservationStatuses}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
-
 
 // Remove after Facebook mapping migration
 case class TempOrganizationId(organizationId: String)
@@ -255,6 +256,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
 
   override def setMyAccount(accessToken: String, account: ClientInfo): ClientInfo = {
     val request = Put(s"$apiUrl/me/account", Json.stringify(account))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[ClientInfo](), readTimeout)
+  }
+
+  override def addMyAccountCards(accessToken: String, cardTokens: JList[CreditCardToken]): ClientInfo = {
+    val request = Post(s"$apiUrl/me/account/cards", Json.stringify(CardTokens(cardTokens.asScala)))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[ClientInfo](), readTimeout)
   }
