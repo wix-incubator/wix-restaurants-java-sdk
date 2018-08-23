@@ -123,9 +123,4 @@ public interface WixRestaurantsClient {
     ClientInfo getMyAccount(String accessToken);
     ClientInfo setMyAccount(String accessToken, ClientInfo account);
     ClientInfo addMyAccountCards(String accessToken, List<CreditCardToken> cardTokens);
-
-    // Facebook mapping (temporary, will be deprecated soon)
-    String getFacebookMapping(String pageId);
-    void setFacebookMapping(String accessToken, String pageId, String organizationId);
-    void deleteFacebookMapping(String accessToken, String pageId);
 }
