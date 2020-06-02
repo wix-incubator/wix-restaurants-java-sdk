@@ -73,6 +73,7 @@ public interface WixRestaurantsClient {
     Order acceptOrder(String accessToken, String restaurantId, String orderId, Map<String, String> externalIds);
     Order rejectOrder(String accessToken, String restaurantId, String orderId, String comment);
     Order setOrderProperties(String accessToken, String restaurantId, String orderId, Map<String, String> properties);
+    Order confirmOrderCashier(String restaurantId, String orderId);
 
     // Reservations
     Reservation submitReservation(String accessToken, Reservation reservation);

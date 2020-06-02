@@ -165,6 +165,11 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
+  override def confirmOrderCashier(restaurantId: String, orderId: String): Order = {
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/confirmCashier?as=${Actors.restaurant}")
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
+  }
+
   override def submitReservation(accessToken: String, reservation: Reservation): Reservation = {
     val request = Post(s"$apiUrl/organizations/${reservation.restaurantId}/reservations", Json.stringify(reservation))
     Option(accessToken).foreach { theAccessToken => request.addHeader(Authorization.oauth2(theAccessToken)) }
