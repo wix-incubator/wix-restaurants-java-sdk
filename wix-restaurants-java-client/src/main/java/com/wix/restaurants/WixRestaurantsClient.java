@@ -22,6 +22,10 @@ public interface WixRestaurantsClient {
     Organization setOrganization(String accessToken, Organization organization);
     void changeOrganizationLocale(String accessToken, String organizationId, Locale locale);
 
+    // Premium plan
+    void addOrganizationProduct(String accessToken, String organizationId, Product product);
+    void removeOrganizationProduct(String accessToken, String organizationId, Product product);
+
     // Organization properties
     Notifications getNotifications(String accessToken, String organizationId);
     Notifications setNotifications(String accessToken, String organizationId, Notifications notifications);

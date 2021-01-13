@@ -68,6 +68,18 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withoutResult(), readTimeout)
   }
 
+  override def addOrganizationProduct(accessToken: String, organizationId: String, product: Product): Unit = {
+    val request = Post(s"$apiUrl/organizations/$organizationId/products/add", Json.stringify(product))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withoutResult(), readTimeout)
+  }
+
+  override def removeOrganizationProduct(accessToken: String, organizationId: String, product: Product): Unit = {
+    val request = Post(s"$apiUrl/organizations/$organizationId/products/remove", Json.stringify(product))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withoutResult(), readTimeout)
+  }
+
   override def getNotifications(accessToken: String , organizationId: String): Notifications = {
     val request = Get(s"$apiUrl/organizations/$organizationId/notifications")
       .addHeader(Authorization.oauth2(accessToken))
