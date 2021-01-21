@@ -62,6 +62,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Organization](), readTimeout)
   }
 
+  override def setOrganizationAsAdmin(accessToken: String, organization: Organization): Organization = {
+    val request = Put(s"$apiUrl/admin/organizations/${organization.id}", Json.stringify(organization))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Organization](), readTimeout)
+  }
+
   override def changeOrganizationLocale(accessToken: String, organizationId: String, locale: Locale): Unit = {
     val request = Post(s"$apiUrl/organizations/$organizationId/change_locale?locale=$locale")
       .addHeader(Authorization.oauth2(accessToken))

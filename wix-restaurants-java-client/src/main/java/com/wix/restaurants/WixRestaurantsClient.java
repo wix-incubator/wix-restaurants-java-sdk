@@ -20,6 +20,7 @@ public interface WixRestaurantsClient {
     Organization retrieveOrganization(String organizationId);
     Organization retrieveOrganizationAsAdmin(String accessToken, String organizationId);
     Organization setOrganization(String accessToken, Organization organization);
+    Organization setOrganizationAsAdmin(String accessToken, Organization organization);
     void changeOrganizationLocale(String accessToken, String organizationId, Locale locale);
 
     // Premium plan
