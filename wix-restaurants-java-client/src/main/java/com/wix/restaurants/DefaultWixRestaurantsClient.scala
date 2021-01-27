@@ -56,6 +56,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Organization](), readTimeout)
   }
+
   override def setOrganization(accessToken: String, organization: Organization): Organization = {
     val request = Put(s"$apiUrl/organizations/${organization.id}", Json.stringify(organization))
       .addHeader(Authorization.oauth2(accessToken))
