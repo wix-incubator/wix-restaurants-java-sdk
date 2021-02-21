@@ -63,6 +63,15 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Organization](), readTimeout)
   }
 
+  override def createOrganization(accessToken: String, organization: Organization): Organization = {
+    val anonymousRequest = Post(s"$apiUrl/organizations", Json.stringify(organization))
+    val request = Option(accessToken) match {
+      case Some(at) => anonymousRequest.addHeader(Authorization.oauth2(at))
+      case None => anonymousRequest
+    }
+    Await.result(client.execute(request) withResult[Organization](), readTimeout)
+  }
+
   override def setOrganizationAsAdmin(accessToken: String, organization: Organization): Organization = {
     val request = Put(s"$apiUrl/admin/organizations/${organization.id}", Json.stringify(organization))
       .addHeader(Authorization.oauth2(accessToken))
