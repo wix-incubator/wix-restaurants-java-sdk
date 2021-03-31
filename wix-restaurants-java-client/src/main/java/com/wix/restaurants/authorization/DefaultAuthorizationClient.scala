@@ -32,6 +32,11 @@ class DefaultAuthorizationClient(apiUrl: String = "https://api.wixrestaurants.co
       hasManagerPermission(roles, organization)
     }
   }
+  override def hasManagerPermission(accessToken: String, organization: Organization): Future[Boolean] = {
+    getRoles(accessToken).map { roles =>
+      hasManagerPermission(roles, organization)
+    }
+  }
 
   private def hasManagerPermission(roles: Seq[Role], organization: Organization): Boolean = {
     roles.exists { AuthorizationHelper.hasManagerPermission(organization, _) }
