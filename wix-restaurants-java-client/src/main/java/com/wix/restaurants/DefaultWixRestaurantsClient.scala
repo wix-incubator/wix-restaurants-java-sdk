@@ -197,7 +197,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, comment: String) : Order = {
-    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(Comment(comment)))
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(Comment(Option(comment))))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
