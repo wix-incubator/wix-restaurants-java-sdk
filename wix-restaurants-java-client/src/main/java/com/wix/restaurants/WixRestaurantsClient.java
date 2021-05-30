@@ -79,7 +79,7 @@ public interface WixRestaurantsClient {
     List<Order> retrieveOrdersByEmail(String accessToken, String organizationId, String email, Date modifiedSince, Integer limit);
 
     Order acceptOrder(String accessToken, String restaurantId, String orderId, Map<String, String> externalIds);
-    Order acceptOrder(String accessToken, String restaurantId, String orderId, String comment);
+    Order acceptOrderWithComment(String accessToken, String restaurantId, String orderId, String comment);
     Order rejectOrder(String accessToken, String restaurantId, String orderId, String comment);
     Order setOrderProperties(String accessToken, String restaurantId, String orderId, Map<String, String> properties);
     Order confirmOrderCashier(String organizationId, String orderId);
