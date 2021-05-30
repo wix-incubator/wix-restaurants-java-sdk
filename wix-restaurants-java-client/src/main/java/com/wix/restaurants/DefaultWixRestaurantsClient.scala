@@ -164,6 +164,16 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
+  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, status: String, delivered: String, created: String, order: String, limit: Int): JList[Order] = {
+    val statusPart = Option(status).map { value => s"&status=$value"}.getOrElse("")
+    val deliveredPart = Option(delivered).map { value => s"&delivered=$value" }.getOrElse("")
+    val createdPart = Option(created).map { value => s"&created=$value" }.getOrElse("")
+    val orderPart = Option(order).map { value => s"&order=$value" }.getOrElse("")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$statusPart$deliveredPart$createdPart$orderPart&limit=$limit")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
+  }
+
   override def retrieveOrdersByPhone(accessToken: String, organizationId: String, phone: String, modifiedSince: Date, limit: Integer): JList[Order] = {
     retrieveUserOrders(accessToken, organizationId, new AuthenticationUser(Namespaces.phone, phone), modifiedSince, limit)
   }
@@ -182,6 +192,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
 
   override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, externalIds: JMap[String, String]): Order = {
     val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(Comment(None)))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
+  }
+
+  override def acceptOrder(accessToken: String, restaurantId: String, orderId: String, comment: String) : Order = {
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}", Json.stringify(Comment(comment)))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }

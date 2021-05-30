@@ -44,6 +44,7 @@ public interface WixRestaurantsClient {
     Order retrieveOrderAsRestaurant(String accessToken, String restaurantId, String orderId);
     List<Order> retrieveNewOrders(String accessToken, String restaurantId);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, int limit);
+    List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, Boolean delivered, String created, String order, int limit);
 
     /**
      * Retrieves a batch of orders associated with the given customer phone number.
@@ -78,6 +79,7 @@ public interface WixRestaurantsClient {
     List<Order> retrieveOrdersByEmail(String accessToken, String organizationId, String email, Date modifiedSince, Integer limit);
 
     Order acceptOrder(String accessToken, String restaurantId, String orderId, Map<String, String> externalIds);
+    Order acceptOrder(String accessToken, String restaurantId, String orderId, String comment);
     Order rejectOrder(String accessToken, String restaurantId, String orderId, String comment);
     Order setOrderProperties(String accessToken, String restaurantId, String orderId, Map<String, String> properties);
     Order confirmOrderCashier(String organizationId, String orderId);
