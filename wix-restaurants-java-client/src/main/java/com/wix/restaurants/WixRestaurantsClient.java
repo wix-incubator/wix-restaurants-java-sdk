@@ -44,7 +44,7 @@ public interface WixRestaurantsClient {
     Order retrieveOrderAsRestaurant(String accessToken, String restaurantId, String orderId);
     List<Order> retrieveNewOrders(String accessToken, String restaurantId);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, int limit);
-    List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, Boolean delivered, String created, String order, int limit);
+    List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, String delivered, String created, String order, int limit);
 
     /**
      * Retrieves a batch of orders associated with the given customer phone number.
