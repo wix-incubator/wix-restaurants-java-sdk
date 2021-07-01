@@ -21,6 +21,7 @@ public interface WixRestaurantsClient {
     Organization retrieveOrganizationAsAdmin(String accessToken, String organizationId);
     Organization setOrganization(String accessToken, Organization organization);
     Organization createOrganization(String accessToken, Organization organization);
+    Organization createOrganizationAsAdmin(String accessToken, Organization organization);
     Organization setOrganizationAsAdmin(String accessToken, Organization organization);
     void changeOrganizationLocale(String accessToken, String organizationId, Locale locale);
 
