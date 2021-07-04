@@ -4,7 +4,7 @@
 
     <groupId>com.wix.restaurants</groupId>
     <artifactId>wix-restaurants-java-sdk</artifactId>
-    <version>1.23.0-SNAPSHOT</version>
+    <version>1.24.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Wix Restaurants Java SDK</name>
     <description>Wix Restaurants Java SDK modules pom</description>
@@ -61,11 +61,11 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
-	</licenses>	
-	
+	</licenses>
+
 
     <properties>
-		<openrest4j.version>1.36.0</openrest4j.version>
+		<openrest4j.version>1.40.0-SNAPSHOT</openrest4j.version>
 		<com.wix.restaurants.availability.version>1.9.0</com.wix.restaurants.availability.version>
 		<com.wix.restaurants.authentication.version>1.12.0</com.wix.restaurants.authentication.version>
         <com.wix.rest.rest-rfc7807.version>1.0.0</com.wix.rest.rest-rfc7807.version>
