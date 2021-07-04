@@ -20,6 +20,13 @@ public class PickupBuilder {
         return this;
     }
 
+    public PickupBuilder forAsapWithContactless(String label, String labelValue) {
+        pickupDispatch.timeGuarantee = TimeGuarantees.before;
+        pickupDispatch.time = null;
+        pickupDispatch.contactlessDineIn = new ContactlessDineIn(label, labelValue);
+        return this;
+    }
+
     public PickupDispatch build() {
         return pickupDispatch;
     }
