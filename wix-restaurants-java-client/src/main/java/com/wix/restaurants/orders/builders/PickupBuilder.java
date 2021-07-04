@@ -1,6 +1,7 @@
 package com.wix.restaurants.orders.builders;
 
 import com.openrest.olo.dispatches.PickupDispatch;
+import com.openrest.v1_1.ContactlessDineIn;
 import com.wix.restaurants.TimeGuarantees;
 
 import java.util.Date;
