@@ -37,7 +37,9 @@ public interface WixRestaurantsClient {
 
     // Menus
     Menu getMenu(String accessToken, String restaurantId);
+    Menu getMenuWithLocationId(String accessToken, String restaurantId, String locationId);
     Menu setMenu(String accessToken, String restaurantId, Menu menu);
+    Menu setMenuWithLocationId(String accessToken, String restaurantId, Menu menu, String locationId);
 
     // Orders
     Order submitOrder(String accessToken, Order order);
