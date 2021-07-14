@@ -145,7 +145,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
-  override def setMenuWithLocationId(accessToken: String , restaurantId: String, locationId: String): Menu = {
+  override def setMenuWithLocationId(accessToken: String , restaurantId: String,  menu: Menu, locationId: String): Menu = {
     val queryLocationId = Option(locationId).map { theLocationId => s"?locationId=$theLocationId" }.getOrElse("")
     val request = Put(s"$apiUrl/organizations/$restaurantId/menu${queryLocationId}", Json.stringify(menu))
       .addHeader(Authorization.oauth2(accessToken))
