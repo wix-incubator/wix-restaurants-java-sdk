@@ -283,7 +283,8 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
     val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
     val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
-    val limitParam = s"&limit=${Option(limit).map { _.toInt }.getOrElse(1000000)}"
+    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
+    val limitParam = s"&limit=${actualLimit}"
     val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
     val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$queryParams").addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
