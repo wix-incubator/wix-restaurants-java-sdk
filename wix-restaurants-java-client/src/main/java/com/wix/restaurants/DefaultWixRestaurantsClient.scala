@@ -279,6 +279,23 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     }
   }
 
+  override def retrieveOrdersByCreatedAsc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
+    retrieveOrdersByCreated(accessToken, restaurantId, contactId, createdSince, limit, "asc")
+
+  override def retrieveOrdersByCreatedDesc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
+    retrieveOrdersByCreated(accessToken, restaurantId, contactId, createdSince, limit, "desc")
+
+  private def retrieveOrdersByCreated(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer, order: String): JList[Order] = {
+    val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
+    val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
+    val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
+    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000)
+    val limitParam = s"&limit=${actualLimit}"
+    val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&order=created:${order}$queryParams").addHeader(Authorization.oauth2(accessToken))
+    Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
+  }
+
   override def setReservationStatusAsOwner(accessToken: String, restaurantId: String, reservationId: String, status: String, comment: String): Reservation = {
     status match {
       case ReservationStatuses.canceled =>
