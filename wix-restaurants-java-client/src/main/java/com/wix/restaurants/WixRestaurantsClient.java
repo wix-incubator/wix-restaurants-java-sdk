@@ -6,6 +6,7 @@ import com.wix.restaurants.authentication.WixRestaurantsAuthenticationClient;
 import com.wix.restaurants.authorization.AuthorizationClient;
 import com.wix.restaurants.i18n.Locale;
 import com.wix.restaurants.reservations.Reservation;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 import java.util.List;
@@ -48,6 +49,7 @@ public interface WixRestaurantsClient {
     List<Order> retrieveNewOrders(String accessToken, String restaurantId);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, int limit);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, String delivered, String created, String order, int limit);
+    List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String contactId, DateTime createdSince, Integer limit);
 
     /**
      * Retrieves a batch of orders associated with the given customer phone number.
