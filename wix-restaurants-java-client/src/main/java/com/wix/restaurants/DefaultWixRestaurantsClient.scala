@@ -286,7 +286,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
     val limitParam = s"&limit=${actualLimit}"
     val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
-    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$queryParams").addHeader(Authorization.oauth2(accessToken))
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&order=created:asc$queryParams").addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
