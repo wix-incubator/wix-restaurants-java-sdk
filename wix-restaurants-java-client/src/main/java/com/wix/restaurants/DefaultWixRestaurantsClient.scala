@@ -279,14 +279,20 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     }
   }
 
-  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer): JList[Order] = {
+  override def retrieveOrdersByCreatedAsc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
+    retrieveOrdersByCreatedInternal(accessToken, restaurantId, contactId, createdSince, limit, "asc")
+
+  override def retrieveOrdersByCreatedDesc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
+    retrieveOrdersByCreatedInternal(accessToken, restaurantId, contactId, createdSince, limit, "desc")
+
+  private def retrieveOrdersByCreatedInternal(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer, order: String): JList[Order] = {
     val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
     val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
     val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
-    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000000)
+    val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000)
     val limitParam = s"&limit=${actualLimit}"
     val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
-    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&order=created:asc$queryParams").addHeader(Authorization.oauth2(accessToken))
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&order=created:${order}$queryParams").addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
