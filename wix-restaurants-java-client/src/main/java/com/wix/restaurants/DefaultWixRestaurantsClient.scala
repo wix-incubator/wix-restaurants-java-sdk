@@ -1,5 +1,8 @@
 package com.wix.restaurants
 
+import java.net.URLEncoder
+import java.util.{Date, List => JList, Map => JMap}
+
 import akka.actor.ActorSystem
 import akka.http.javadsl.model.headers.Authorization
 import akka.http.scaladsl.client.RequestBuilding.{Delete, Get, Post, Put}
@@ -15,7 +18,6 @@ import com.wix.restaurants.i18n.Locale
 import com.wix.restaurants.json.Json
 import com.wix.restaurants.orders.{Orders, Statuses => OrderStatuses}
 import com.wix.restaurants.reservations.{Reservation, Reservations, Statuses => ReservationStatuses}
-import org.joda.time.DateTime
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
@@ -277,14 +279,13 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     }
   }
 
-  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, contactId: String, createdSince: DateTime, limit: Integer): JList[Order] = {
+  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer): JList[Order] = {
     val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
-    val createdSinceParam = Option(createdSince).map( value => s"&created=gte:${value.getMillis}")
+    val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
+    val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
     val limitParam = s"&limit=${Option(limit).map { _.toInt }.getOrElse(1000000)}"
-    val viewModeParam = s"viewMode=${Actors.restaurant}"
-    val queryString = s"$viewModeParam$contactIdParam$createdSinceParam$limitParam"
-    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?$queryString")
-    request.addHeader(Authorization.oauth2(accessToken))
+    val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$queryParams").addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
