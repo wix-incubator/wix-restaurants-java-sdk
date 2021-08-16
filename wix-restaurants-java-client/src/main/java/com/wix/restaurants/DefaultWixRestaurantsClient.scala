@@ -280,12 +280,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def retrieveOrdersByCreatedAsc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
-    retrieveOrdersByCreatedInternal(accessToken, restaurantId, contactId, createdSince, limit, "asc")
+    retrieveOrdersByCreated(accessToken, restaurantId, contactId, createdSince, limit, "asc")
 
   override def retrieveOrdersByCreatedDesc(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer = 1000): JList[Order] =
-    retrieveOrdersByCreatedInternal(accessToken, restaurantId, contactId, createdSince, limit, "desc")
+    retrieveOrdersByCreated(accessToken, restaurantId, contactId, createdSince, limit, "desc")
 
-  private def retrieveOrdersByCreatedInternal(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer, order: String): JList[Order] = {
+  private def retrieveOrdersByCreated(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer, order: String): JList[Order] = {
     val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
     val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
     val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
