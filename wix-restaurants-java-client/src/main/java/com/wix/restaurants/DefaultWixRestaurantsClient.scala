@@ -235,7 +235,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
   }
 
   override def setOrderContactId(accessToken: String, restaurantId: String, orderId: String, contactId: String): Order =  {
-    val request = Put(s"$apiUrl/organizations/$restaurantId/orders/$orderId/contactId", Json.stringify(contactId))
+    val request = Post(s"$apiUrl/admin/organizations/$restaurantId/orders/$orderId/setContactId", Json.stringify(contactId))
       .addHeader(Authorization.oauth2(accessToken))
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
