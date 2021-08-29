@@ -292,13 +292,14 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     retrieveOrdersByCreated(accessToken, restaurantId, contactId, createdSince, limit, "desc")
 
   private def retrieveOrdersByCreated(accessToken: String, restaurantId: String, contactId: String, createdSince: Date, limit: Integer, order: String): JList[Order] = {
+    val organizationParam = Option(restaurantId).map { value => s"&organizationId=$value"}.getOrElse("")
     val contactIdParam = Option(contactId).map { value => s"&contactId=$value"}.getOrElse("")
     val createdSinceTimestamp = Option(createdSince).map { _.getTime }.getOrElse(0L)
     val createdSinceParam = s"&created=gte:${createdSinceTimestamp}"
     val actualLimit = Option(limit).map { _.toInt }.getOrElse(1000)
     val limitParam = s"&limit=${actualLimit}"
-    val queryParams = s"$contactIdParam$createdSinceParam$limitParam"
-    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}&order=created:${order}$queryParams").addHeader(Authorization.oauth2(accessToken))
+    val queryParams = s"$organizationParam$contactIdParam$createdSinceParam$limitParam"
+    val request = Get(s"$apiUrl/admin/orders?viewMode=${Actors.restaurant}&order=created:${order}$queryParams").addHeader(Authorization.oauth2(accessToken))
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
