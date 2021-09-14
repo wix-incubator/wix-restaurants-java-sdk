@@ -152,6 +152,12 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
+  override def aMenuWithUpdatedLocale(accessToken: String ,menu: Menu, fromLocale: String, toLocale: String): Menu = {
+    val request = Get(s"$apiUrl/admin/aMenuWithUpdatedLocale?fromLocale=$fromLocale&toLocale=$toLocale", Json.stringify(menu))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Menu](), readTimeout)
+  }
+
   override def submitOrder(accessToken: String, order: Order): Order = {
     val anonymousRequest = Post(s"$apiUrl/organizations/${order.restaurantId}/orders", Json.stringify(order))
     val request = Option(accessToken) match {
