@@ -228,6 +228,13 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Order](), readTimeout)
   }
 
+  override def acceptOrderWithCommentAndPickupTime(accessToken: String, restaurantId: String, orderId: String, comment: String, pickupTime: Date) : Order = {
+    val pickupTimeParam = Option(pickupTime).map(time => s"&pickupTime=${time.getTime.toString}").getOrElse("")
+    val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/accept?as=${Actors.restaurant}$pickupTimeParam", Json.stringify(Comment(Option(comment))))
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Order](), readTimeout)
+  }
+
   override def rejectOrder(accessToken: String, restaurantId: String, orderId: String, comment: String): Order = {
     val request = Post(s"$apiUrl/organizations/$restaurantId/orders/$orderId/cancel?as=${Actors.restaurant}", Json.stringify(Comment(Option(comment))))
       .addHeader(Authorization.oauth2(accessToken))
