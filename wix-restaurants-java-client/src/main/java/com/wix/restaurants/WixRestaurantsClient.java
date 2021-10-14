@@ -86,6 +86,7 @@ public interface WixRestaurantsClient {
 
     Order acceptOrder(String accessToken, String restaurantId, String orderId, Map<String, String> externalIds);
     Order acceptOrderWithComment(String accessToken, String restaurantId, String orderId, String comment);
+    Order acceptOrderWithCommentAndPickupTime(String accessToken, String restaurantId, String orderId, String comment, Date pickupTime);
     Order rejectOrder(String accessToken, String restaurantId, String orderId, String comment);
     Order setOrderProperties(String accessToken, String restaurantId, String orderId, Map<String, String> properties);
     Order setOrderContactId(String accessToken, String restaurantId, String orderId, String contactId);
