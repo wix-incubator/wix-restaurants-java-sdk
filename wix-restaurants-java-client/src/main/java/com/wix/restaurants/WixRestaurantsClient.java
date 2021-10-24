@@ -49,6 +49,7 @@ public interface WixRestaurantsClient {
     List<Order> retrieveNewOrders(String accessToken, String restaurantId);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, int limit);
     List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, String delivered, String created, String order, int limit);
+    List<Order> retrieveOrdersAsRestaurant(String accessToken, String restaurantId, String status, String delivered, String created, String order, int limit, String locationIds);
     List<Order> retrieveOrdersByCreatedAsc(String accessToken, String restaurantId, String contactId, Date createdSince, Integer limit);
     List<Order> retrieveOrdersByCreatedDesc(String accessToken, String restaurantId, String contactId, Date createdSince, Integer limit);
 
