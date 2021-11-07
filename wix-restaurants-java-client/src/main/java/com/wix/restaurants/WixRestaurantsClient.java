@@ -41,6 +41,7 @@ public interface WixRestaurantsClient {
     Menu setMenu(String accessToken, String restaurantId, Menu menu);
     Menu setMenuWithLocationId(String accessToken, String restaurantId, Menu menu, String locationId);
     Menu aMenuWithUpdatedLocale(String accessToken, Menu menu, String fromLocale, String toLocale);
+    Menu menuChangeLocale(String accessToken, Menu menu, String fromLocale, String toLocale);
 
     // Orders
     Order submitOrder(String accessToken, Order order);
