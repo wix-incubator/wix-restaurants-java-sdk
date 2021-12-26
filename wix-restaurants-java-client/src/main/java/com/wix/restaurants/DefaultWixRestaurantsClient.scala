@@ -141,7 +141,7 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
 
   override def getMenuWithLocationIdAsGzip(accessToken: String , restaurantId: String, locationId: String): Menu = {
     val queryLocationId = Option(locationId).map { theLocationId => s"?locationId=$theLocationId" }.getOrElse("")
-    val request = Get(s"$apiUrl/organizations/$restaurantId/gzipMenu${queryLocationId}")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/menu${queryLocationId}")
       .addHeader(Authorization.oauth2(accessToken))
       .addHeader(AcceptEncoding.create(HttpEncoding("gzip")))
     Await.result(client.execute(request) withResult[Menu](), readTimeout)
