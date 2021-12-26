@@ -2,10 +2,10 @@ package com.wix.restaurants
 
 import java.net.URLEncoder
 import java.util.{Date, List => JList, Map => JMap}
-
 import akka.actor.ActorSystem
-import akka.http.javadsl.model.headers.Authorization
+import akka.http.javadsl.model.headers.{AcceptEncoding, Authorization}
 import akka.http.scaladsl.client.RequestBuilding.{Delete, Get, Post, Put}
+import akka.http.scaladsl.model.headers.HttpEncoding
 import com.openrest.v1_1._
 import com.wix.pay.smaug.client.model.CreditCardToken
 import com.wix.rest.rfc7807.api.model.ErrorResponse
@@ -136,6 +136,14 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     val queryLocationId = Option(locationId).map { theLocationId => s"?locationId=$theLocationId" }.getOrElse("")
     val request = Get(s"$apiUrl/organizations/$restaurantId/menu${queryLocationId}")
       .addHeader(Authorization.oauth2(accessToken))
+    Await.result(client.execute(request) withResult[Menu](), readTimeout)
+  }
+
+  override def getMenuWithLocationIdAsGzip(accessToken: String , restaurantId: String, locationId: String): Menu = {
+    val queryLocationId = Option(locationId).map { theLocationId => s"?locationId=$theLocationId" }.getOrElse("")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/gzipMenu${queryLocationId}")
+      .addHeader(Authorization.oauth2(accessToken))
+      .addHeader(AcceptEncoding.create(HttpEncoding("gzip")))
     Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
