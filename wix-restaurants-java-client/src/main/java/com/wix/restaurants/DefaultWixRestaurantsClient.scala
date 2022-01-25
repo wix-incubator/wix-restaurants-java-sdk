@@ -237,6 +237,20 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
   }
 
+  // with support in modified, deliveryTime and created filters
+  override def retrieveOrdersAsRestaurant(accessToken: String, restaurantId: String, status: String, delivered: String, created: String, modified: String,  deliveryTime: String, order: String, limit: Int, locationIds: String): JList[Order] = {
+    val statusPart = Option(status).map { value => s"&status=$value"}.getOrElse("")
+    val createdPart = Option(created).map { value => s"&created=$value" }.getOrElse("")
+    val modifiedPart = Option(modified).map { value => s"&modified=$value" }.getOrElse("")
+    val deliveryTimePart = Option(deliveryTime).map { value => s"&deliveryTime=$value" }.getOrElse("")
+    val deliveredPart = Option(delivered).map { value => s"&delivered=$value" }.getOrElse("")
+    val orderPart = Option(order).map { value => s"&order=$value" }.getOrElse("")
+    val locationIdsPart = Option(locationIds).map { value => s"&locationIds=$value" }.getOrElse("")
+    val request = Get(s"$apiUrl/organizations/$restaurantId/orders?viewMode=${Actors.restaurant}$statusPart$createdPart$modifiedPart$deliveryTimePart$deliveredPart$orderPart$locationIdsPart&limit=$limit")
+      .addHeader(Authorization.oauth2(accessToken))
+    Await.result[Orders](client.execute(request) withResult[Orders](), readTimeout).results
+  }
+
   override def retrieveOrdersByPhone(accessToken: String, organizationId: String, phone: String, modifiedSince: Date, limit: Integer): JList[Order] = {
     retrieveUserOrders(accessToken, organizationId, new AuthenticationUser(Namespaces.phone, phone), modifiedSince, limit)
   }
