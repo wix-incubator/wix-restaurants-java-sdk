@@ -12,6 +12,7 @@ public class Errors {
     public static final String Authentication         = "https://www.wixrestaurants.com/errors/authentication";
     public static final String NotSecure              = "https://www.wixrestaurants.com/errors/not_secure";
     public static final String NotFound               = "https://www.wixrestaurants.com/errors/not_found";
+    public static final String PosError               = "https://www.wixrestaurants.com/errors/pos_error";
 
     // Server
     public static final String Internal               = "https://www.wixrestaurants.com/errors/internal";
