@@ -160,12 +160,6 @@ class DefaultWixRestaurantsClient(apiUrl: String = "https://api.wixrestaurants.c
     Await.result(client.execute(request) withResult[Menu](), readTimeout)
   }
 
-  override def aMenuWithUpdatedLocale(accessToken: String ,menu: Menu, fromLocale: String, toLocale: String): Menu = {
-    val request = Get(s"$apiUrl/admin/aMenuWithUpdatedLocale?fromLocale=$fromLocale&toLocale=$toLocale", Json.stringify(menu))
-      .addHeader(Authorization.oauth2(accessToken))
-    Await.result(client.execute(request) withResult[Menu](), readTimeout)
-  }
-
   override def menuChangeLocale(accessToken: String ,menu: Menu, fromLocale: String, toLocale: String): Menu = {
     val request = Post(s"$apiUrl/admin/menu/changeLocale?fromLocale=$fromLocale&toLocale=$toLocale", Json.stringify(menu))
       .addHeader(Authorization.oauth2(accessToken))
